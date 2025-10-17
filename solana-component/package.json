@@ -1,0 +1,39 @@
+{
+    "name": "datasov-solana-sdk",
+    "version": "1.0.0",
+    "description": "DataSov Solana Component SDK - Data Marketplace for Tokenized Data Ownership",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "anchor test",
+        "deploy": "anchor deploy",
+        "dev": "anchor build && anchor deploy --provider.cluster devnet"
+    },
+    "keywords": [
+        "solana",
+        "blockchain",
+        "data-marketplace",
+        "nft",
+        "datasov",
+        "anchor"
+    ],
+    "author": "DataSov Team",
+    "license": "MIT",
+    "dependencies": {
+        "@coral-xyz/anchor": "^0.29.0",
+        "@solana/web3.js": "^1.87.6",
+        "@solana/spl-token": "^0.3.9",
+        "bn.js": "^5.2.1"
+    },
+    "devDependencies": {
+        "@types/bn.js": "^5.1.5",
+        "@types/node": "^20.10.0",
+        "typescript": "^5.3.0",
+        "mocha": "^10.2.0",
+        "chai": "^4.3.10",
+        "@types/mocha": "^10.0.6",
+        "@types/chai": "^4.3.11",
+        "ts-mocha": "^10.0.0"
+    }
+}
