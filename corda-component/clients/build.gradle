@@ -1,0 +1,39 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.20'
+    id 'application'
+}
+
+apply plugin: 'kotlin'
+
+dependencies {
+    // Corda dependencies
+    implementation group: 'net.corda', name: 'corda-rpc', version: corda_release_version
+    implementation group: 'net.corda', name: 'corda-core', version: corda_release_version
+    
+    // Contracts and workflows
+    implementation project(':contracts')
+    implementation project(':workflows')
+    
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    
+    // HTTP client for REST API
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+    
+    // JSON processing
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
+    
+    // Logging
+    implementation "org.slf4j:slf4j-api:$slf4j_version"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
+    
+    // Testing
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "junit:junit:$junit_version"
+}
+
+application {
+    mainClassName = "com.datasov.client.DataSovClientKt"
+}

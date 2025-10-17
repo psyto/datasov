@@ -1,0 +1,169 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.20'
+    id 'net.corda.plugins.cordapp' version '5.0.21'
+    id 'net.corda.plugins.cordformation' version '5.0.21'
+    id 'net.corda.plugins.quasar-utils' version '5.0.21'
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'net.corda.plugins.cordapp'
+apply plugin: 'net.corda.plugins.cordformation'
+apply plugin: 'net.corda.plugins.quasar-utils'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://software.r3.com/artifactory/corda' }
+    maven { url 'https://software.r3.com/artifactory/corda-lib' }
+    maven { url 'https://software.r3.com/artifactory/corda-lib-dev' }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir rootProject.file("config/dev")
+        }
+    }
+    test {
+        resources {
+            srcDir rootProject.file("config/test")
+        }
+    }
+    integrationTest {
+        kotlin {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integrationTest/kotlin')
+        }
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+    // Corda dependencies
+    cordaRelease group: 'net.corda', name: 'corda-rpc', version: corda_release_version
+    cordaRelease group: 'net.corda', name: 'corda-node-api', version: corda_release_version
+    cordaRelease group: 'net.corda', name: 'corda-core', version: corda_release_version
+    
+    // Corda Plugins
+    cordapp group: 'net.corda', name: 'corda-finance-contracts', version: corda_release_version
+    cordapp group: 'net.corda', name: 'corda-finance-workflows', version: corda_release_version
+    
+    // DataSov Corda Component
+    cordapp project(':contracts')
+    cordapp project(':workflows')
+    
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    
+    // Testing
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.assertj:assertj-core:3.8.0"
+    
+    // Corda testing
+    testImplementation "net.corda:corda-node-driver:$corda_release_version"
+    testImplementation "net.corda:corda-test-utils:$corda_release_version"
+    
+    // Integration testing
+    integrationTestImplementation "net.corda:corda-node-driver:$corda_release_version"
+    integrationTestImplementation "net.corda:corda-test-utils:$corda_release_version"
+    
+    // Logging
+    implementation "org.slf4j:slf4j-api:$slf4j_version"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
+    
+    // JSON processing
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
+    
+    // HTTP client for external integrations
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+    
+    // Encryption and security
+    implementation "org.bouncycastle:bcprov-jdk15on:1.70"
+    implementation "org.bouncycastle:bcpkix-jdk15on:1.70"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        languageVersion = "1.8"
+        apiVersion = "1.8"
+        jvmTarget = "11"
+        javaParameters = true
+    }
+}
+
+jar {
+    baseName = 'datasov-corda'
+    archiveVersion = '1.0.0'
+}
+
+cordapp {
+    targetPlatformVersion corda_platform_version.toInteger()
+    minimumPlatformVersion corda_platform_version.toInteger()
+    workflow {
+        name "DataSov Corda Workflows"
+        vendor "DataSov Team"
+        licence "MIT"
+        versionId 1
+    }
+    signing {
+        enabled false
+    }
+}
+
+task integrationTest(type: Test, dependsOn: []) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+    nodeDefaults {
+        projectCordapp {
+            deploy = false
+        }
+        cordapp project(':contracts')
+        cordapp project(':workflows')
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+    }
+    node {
+        name "O=Notary,L=London,C=GB"
+        notary = [validating : false]
+        p2pPort 10002
+        rpcSettings {
+            address("localhost:10003")
+            adminAddress("localhost:10043")
+        }
+    }
+    node {
+        name "O=IdentityProvider,L=Tokyo,C=JP"
+        p2pPort 10005
+        rpcSettings {
+            address("localhost:10006")
+            adminAddress("localhost:10046")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+    }
+    node {
+        name "O=DataOwner,L=Osaka,C=JP"
+        p2pPort 10008
+        rpcSettings {
+            address("localhost:10009")
+            adminAddress("localhost:10049")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+    }
+    node {
+        name "O=DataConsumer,L=Kyoto,C=JP"
+        p2pPort 10011
+        rpcSettings {
+            address("localhost:10012")
+            adminAddress("localhost:10052")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+    }
+}

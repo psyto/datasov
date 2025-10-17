@@ -1,0 +1,39 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.20'
+    id 'net.corda.plugins.cordapp' version '5.0.21'
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'net.corda.plugins.cordapp'
+
+cordapp {
+    targetPlatformVersion corda_platform_version.toInteger()
+    minimumPlatformVersion corda_platform_version.toInteger()
+    workflow {
+        name "DataSov DID Workflows"
+        vendor "DataSov Team"
+        licence "MIT"
+        versionId 1
+    }
+    signing {
+        enabled false
+    }
+}
+
+dependencies {
+    // Corda dependencies
+    cordaRelease group: 'net.corda', name: 'corda-core', version: corda_release_version
+    cordaRelease group: 'net.corda', name: 'corda-rpc', version: corda_release_version
+    
+    // Contracts
+    cordapp project(':contracts')
+    
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    
+    // Testing
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "net.corda:corda-node-driver:$corda_release_version"
+    testImplementation "net.corda:corda-test-utils:$corda_release_version"
+}
