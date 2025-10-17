@@ -1,0 +1,358 @@
+import { PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
+
+export interface DataSovSolana {
+    address: "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS";
+    metadata: {
+        name: "datasov-solana";
+        version: "0.1.0";
+        spec: "0.1.0";
+        description: "DataSov Solana Component - Data Marketplace for Tokenized Data Ownership";
+    };
+    instructions: [
+        {
+            name: "initializeMarketplace";
+            accounts: [
+                {
+                    name: "marketplace";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "authority";
+                    isMut: true;
+                    isSigner: true;
+                },
+                {
+                    name: "systemProgram";
+                    isMut: false;
+                    isSigner: false;
+                }
+            ];
+            args: [
+                {
+                    name: "marketplaceFeeBasisPoints";
+                    type: "u16";
+                }
+            ];
+        },
+        {
+            name: "createDataListing";
+            accounts: [
+                {
+                    name: "listing";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "marketplace";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "owner";
+                    isMut: true;
+                    isSigner: true;
+                },
+                {
+                    name: "systemProgram";
+                    isMut: false;
+                    isSigner: false;
+                }
+            ];
+            args: [
+                {
+                    name: "listingId";
+                    type: "u64";
+                },
+                {
+                    name: "price";
+                    type: "u64";
+                },
+                {
+                    name: "dataType";
+                    type: {
+                        defined: "DataType";
+                    };
+                },
+                {
+                    name: "description";
+                    type: "string";
+                }
+            ];
+        },
+        {
+            name: "purchaseData";
+            accounts: [
+                {
+                    name: "listing";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "marketplace";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "buyer";
+                    isMut: true;
+                    isSigner: true;
+                },
+                {
+                    name: "buyerTokenAccount";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "ownerTokenAccount";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "marketplaceTokenAccount";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "tokenProgram";
+                    isMut: false;
+                    isSigner: false;
+                }
+            ];
+            args: [
+                {
+                    name: "listingId";
+                    type: "u64";
+                }
+            ];
+        },
+        {
+            name: "updateListingPrice";
+            accounts: [
+                {
+                    name: "listing";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "owner";
+                    isMut: false;
+                    isSigner: true;
+                }
+            ];
+            args: [
+                {
+                    name: "newPrice";
+                    type: "u64";
+                }
+            ];
+        },
+        {
+            name: "cancelListing";
+            accounts: [
+                {
+                    name: "listing";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "owner";
+                    isMut: false;
+                    isSigner: true;
+                }
+            ];
+            args: [];
+        },
+        {
+            name: "withdrawFees";
+            accounts: [
+                {
+                    name: "marketplace";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "authority";
+                    isMut: true;
+                    isSigner: true;
+                },
+                {
+                    name: "marketplaceTokenAccount";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "authorityTokenAccount";
+                    isMut: true;
+                    isSigner: false;
+                },
+                {
+                    name: "tokenProgram";
+                    isMut: false;
+                    isSigner: false;
+                }
+            ];
+            args: [
+                {
+                    name: "amount";
+                    type: "u64";
+                }
+            ];
+        }
+    ];
+    accounts: [
+        {
+            name: "Marketplace";
+            type: {
+                kind: "struct";
+                fields: [
+                    {
+                        name: "authority";
+                        type: "publicKey";
+                    },
+                    {
+                        name: "feeBasisPoints";
+                        type: "u16";
+                    },
+                    {
+                        name: "totalListings";
+                        type: "u64";
+                    },
+                    {
+                        name: "totalVolume";
+                        type: "u64";
+                    },
+                    {
+                        name: "bump";
+                        type: "u8";
+                    }
+                ];
+            };
+        },
+        {
+            name: "DataListing";
+            type: {
+                kind: "struct";
+                fields: [
+                    {
+                        name: "id";
+                        type: "u64";
+                    },
+                    {
+                        name: "owner";
+                        type: "publicKey";
+                    },
+                    {
+                        name: "price";
+                        type: "u64";
+                    },
+                    {
+                        name: "dataType";
+                        type: {
+                            defined: "DataType";
+                        };
+                    },
+                    {
+                        name: "description";
+                        type: "string";
+                    },
+                    {
+                        name: "isActive";
+                        type: "bool";
+                    },
+                    {
+                        name: "createdAt";
+                        type: "i64";
+                    },
+                    {
+                        name: "soldAt";
+                        type: {
+                            option: "i64";
+                        };
+                    },
+                    {
+                        name: "cancelledAt";
+                        type: {
+                            option: "i64";
+                        };
+                    },
+                    {
+                        name: "buyer";
+                        type: {
+                            option: "publicKey";
+                        };
+                    },
+                    {
+                        name: "bump";
+                        type: "u8";
+                    }
+                ];
+            };
+        }
+    ];
+    types: [
+        {
+            name: "DataType";
+            type: {
+                kind: "enum";
+                variants: [
+                    {
+                        name: "LocationHistory";
+                    },
+                    {
+                        name: "AppUsage";
+                    },
+                    {
+                        name: "PurchaseHistory";
+                    },
+                    {
+                        name: "HealthData";
+                    },
+                    {
+                        name: "SocialMediaActivity";
+                    },
+                    {
+                        name: "SearchHistory";
+                    },
+                    {
+                        name: "Custom";
+                        fields: [
+                            {
+                                name: "value";
+                                type: "string";
+                            }
+                        ];
+                    }
+                ];
+            };
+        }
+    ];
+    errors: [
+        {
+            code: 6000;
+            name: "ListingNotActive";
+            msg: "Listing is not active";
+        },
+        {
+            code: 6001;
+            name: "InvalidListingId";
+            msg: "Invalid listing ID";
+        },
+        {
+            code: 6002;
+            name: "Unauthorized";
+            msg: "Unauthorized access";
+        },
+        {
+            code: 6003;
+            name: "InsufficientFunds";
+            msg: "Insufficient funds";
+        },
+        {
+            code: 6004;
+            name: "InvalidPrice";
+            msg: "Invalid price";
+        }
+    ];
+}
