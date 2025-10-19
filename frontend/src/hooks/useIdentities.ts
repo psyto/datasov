@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { DigitalIdentity, IdentityProof } from "@/types";
-import apiService from "@/services/api";
+import { DigitalIdentity, IdentityProof } from "../types";
+import apiService from "../services/api";
 import toast from "react-hot-toast";
 
 export const useIdentity = (identityId: string) => {

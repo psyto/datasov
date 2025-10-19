@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { PlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { DataType } from "@/types";
-import { useDataListings } from "@/hooks/useDataListings";
-import DataListingCard from "@/components/DataListingCard";
-import CreateDataListingModal from "@/components/CreateDataListingModal";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { DataType } from "../types";
+import { useDataListings } from "../hooks/useDataListings";
+import DataListingCard from "../components/DataListingCard";
+import CreateDataListingModal from "../components/CreateDataListingModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const MyData: React.FC = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);

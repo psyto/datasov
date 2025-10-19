@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { HealthCheckResponse } from "@/types";
-import apiService from "@/services/api";
+import { HealthCheckResponse } from "../types";
+import apiService from "../services/api";
 
 export const useSystemHealth = () => {
     return useQuery("systemHealth", () => apiService.getHealth(), {

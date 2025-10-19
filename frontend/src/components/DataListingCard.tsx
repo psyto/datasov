@@ -6,7 +6,7 @@ import {
     PencilIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { DataListing, DataType } from "@/types";
+import { DataListing, DataType } from "../types";
 import { format } from "date-fns";
 
 interface DataListingCardProps {

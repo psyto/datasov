@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { IdentityType, VerificationMethodType } from "@/types";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { IdentityType, VerificationMethodType } from "../types";
+import LoadingSpinner from "./LoadingSpinner";
 import toast from "react-hot-toast";
 
 interface CreateIdentityModalProps {

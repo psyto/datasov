@@ -12,12 +12,15 @@ import {
     IdentityProof,
     AccessProof,
     PaginatedResponse,
-} from "@/types";
+} from "../types";
 
 class ApiService {
     private api: AxiosInstance;
+    private mockMode: boolean;
 
     constructor() {
+        this.mockMode = process.env.REACT_APP_MOCK_MODE === "true";
+
         this.api = axios.create({
             baseURL: process.env.REACT_APP_API_URL || "http://localhost:3001",
             timeout: 30000,
@@ -57,6 +60,28 @@ class ApiService {
 
     // Health & Status
     async getHealth(): Promise<HealthCheckResponse> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            return {
+                status: "healthy",
+                timestamp: Date.now(),
+                services: {
+                    corda: { status: "up", lastCheck: Date.now() },
+                    solana: { status: "up", lastCheck: Date.now() },
+                    bridge: { status: "up", lastCheck: Date.now() },
+                    database: { status: "up", lastCheck: Date.now() },
+                },
+                metrics: {
+                    uptime: 3600,
+                    memoryUsage: 75.5,
+                    cpuUsage: 45.2,
+                    activeConnections: 25,
+                },
+            };
+        }
+
         const response = await this.api.get<ApiResponse<HealthCheckResponse>>(
             "/health"
         );
@@ -138,6 +163,61 @@ class ApiService {
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<DataListing>> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 800));
+
+            // Generate mock data listings
+            const mockListings: DataListing[] = [
+                {
+                    id: 1,
+                    owner: "user@example.com",
+                    price: "100",
+                    dataType: "PERSONAL_DATA" as any,
+                    description: "Personal demographic data",
+                    isActive: true,
+                    createdAt: Date.now() - 86400000,
+                    cordaIdentityId: "ID_001",
+                    accessProof: undefined,
+                },
+                {
+                    id: 2,
+                    owner: "user@example.com",
+                    price: "250",
+                    dataType: "BEHAVIORAL_DATA" as any,
+                    description: "User behavior analytics",
+                    isActive: true,
+                    createdAt: Date.now() - 172800000,
+                    cordaIdentityId: "ID_002",
+                    accessProof: undefined,
+                },
+                {
+                    id: 3,
+                    owner: "user@example.com",
+                    price: "500",
+                    dataType: "FINANCIAL_DATA" as any,
+                    description: "Financial transaction history",
+                    isActive: true,
+                    createdAt: Date.now() - 259200000,
+                    cordaIdentityId: "ID_003",
+                    accessProof: undefined,
+                },
+            ];
+
+            return {
+                success: true,
+                data: mockListings,
+                timestamp: Date.now(),
+                requestId: "mock-request-" + Date.now(),
+                pagination: {
+                    page: params?.page || 1,
+                    limit: params?.limit || 10,
+                    total: mockListings.length,
+                    totalPages: 1,
+                },
+            };
+        }
+
         const response = await this.api.get<PaginatedResponse<DataListing>>(
             "/data/listings",
             {

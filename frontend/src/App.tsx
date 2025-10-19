@@ -1,19 +1,19 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import Layout from "@/components/Layout";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { useAuth } from "./hooks/useAuth";
+import Layout from "./components/Layout";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 // Pages
-import Dashboard from "@/pages/Dashboard";
-import Identities from "@/pages/Identities";
-import DataMarketplace from "@/pages/DataMarketplace";
-import MyData from "@/pages/MyData";
-import Analytics from "@/pages/Analytics";
-import Settings from "@/pages/Settings";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import NotFound from "@/pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import Identities from "./pages/Identities";
+import DataMarketplace from "./pages/DataMarketplace";
+import MyData from "./pages/MyData";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({

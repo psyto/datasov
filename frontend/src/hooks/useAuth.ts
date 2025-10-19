@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { AuthState, User } from "@/types";
-import apiService from "@/services/api";
+import { AuthState, User } from "../types";
+import apiService from "../services/api";
 import toast from "react-hot-toast";
 
 export const useAuth = () => {
@@ -35,7 +35,32 @@ export const useAuth = () => {
     // Login mutation
     const loginMutation = useMutation(
         async ({ email, password }: { email: string; password: string }) => {
-            // Mock login - replace with actual API call
+            // Mock login for development
+            if (process.env.REACT_APP_MOCK_MODE === "true") {
+                // Simulate API delay
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                // Mock successful login
+                const mockUser: User = {
+                    id: "1",
+                    name: "Test User",
+                    email: email,
+                    avatar: undefined,
+                    createdAt: Date.now(),
+                    identities: [],
+                    dataListings: [],
+                    purchases: [],
+                };
+
+                const mockToken = "mock-jwt-token-" + Date.now();
+
+                return {
+                    user: mockUser,
+                    token: mockToken,
+                };
+            }
+
+            // Real API call
             const response = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
@@ -62,6 +87,8 @@ export const useAuth = () => {
                     loading: false,
                 });
                 toast.success("Login successful");
+                // Force a re-render by updating the query cache
+                queryClient.invalidateQueries();
             },
             onError: (error: any) => {
                 toast.error(error.message || "Login failed");
@@ -84,7 +111,32 @@ export const useAuth = () => {
             password: string;
             name: string;
         }) => {
-            // Mock register - replace with actual API call
+            // Mock register for development
+            if (process.env.REACT_APP_MOCK_MODE === "true") {
+                // Simulate API delay
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                // Mock successful registration
+                const mockUser: User = {
+                    id: "1",
+                    name: name,
+                    email: email,
+                    avatar: undefined,
+                    createdAt: Date.now(),
+                    identities: [],
+                    dataListings: [],
+                    purchases: [],
+                };
+
+                const mockToken = "mock-jwt-token-" + Date.now();
+
+                return {
+                    user: mockUser,
+                    token: mockToken,
+                };
+            }
+
+            // Real API call
             const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: {
@@ -111,6 +163,8 @@ export const useAuth = () => {
                     loading: false,
                 });
                 toast.success("Registration successful");
+                // Force a re-render by updating the query cache
+                queryClient.invalidateQueries();
             },
             onError: (error: any) => {
                 toast.error(error.message || "Registration failed");

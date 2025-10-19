@@ -5,7 +5,7 @@ import {
     XCircleIcon,
     ClockIcon,
 } from "@heroicons/react/24/outline";
-import { useSystemHealth } from "@/hooks/useSystemHealth";
+import { useSystemHealth } from "../hooks/useSystemHealth";
 
 const SystemStatus: React.FC = () => {
     const { data: health, isLoading } = useSystemHealth();

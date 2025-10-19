@@ -4,8 +4,8 @@ import {
     CreateDataListingRequest,
     UpdateDataListingRequest,
     CancelDataListingRequest,
-} from "@/types";
-import apiService from "@/services/api";
+} from "../types";
+import apiService from "../services/api";
 import toast from "react-hot-toast";
 
 export const useDataListings = (params?: {

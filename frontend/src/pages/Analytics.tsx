@@ -1,14 +1,14 @@
 import React from "react";
 import {
     ChartBarIcon,
-    TrendingUpIcon,
+    ArrowTrendingUpIcon,
     CurrencyDollarIcon,
     UserGroupIcon,
 } from "@heroicons/react/24/outline";
-import StatsCard from "@/components/StatsCard";
-import DataListingsChart from "@/components/DataListingsChart";
-import EarningsChart from "@/components/EarningsChart";
-import TopDataTypesChart from "@/components/TopDataTypesChart";
+import StatsCard from "../components/StatsCard";
+import DataListingsChart from "../components/DataListingsChart";
+import EarningsChart from "../components/EarningsChart";
+import TopDataTypesChart from "../components/TopDataTypesChart";
 
 const Analytics: React.FC = () => {
     const stats = [
@@ -41,7 +41,7 @@ const Analytics: React.FC = () => {
             value: "18.4%",
             change: -2.1,
             changeType: "decrease" as const,
-            icon: TrendingUpIcon,
+            icon: ArrowTrendingUpIcon,
             description: "Views to purchases ratio",
         },
     ];

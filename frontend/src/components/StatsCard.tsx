@@ -1,5 +1,8 @@
 import React from "react";
-import { TrendingUpIcon, TrendingDownIcon } from "@heroicons/react/24/outline";
+import {
+    ArrowTrendingUpIcon,
+    ArrowTrendingDownIcon,
+} from "@heroicons/react/24/outline";
 
 interface StatsCardProps {
     title: string;
@@ -44,9 +47,9 @@ const StatsCard: React.FC<StatsCardProps> = ({
                                     }`}
                                 >
                                     {changeType === "increase" ? (
-                                        <TrendingUpIcon className="h-4 w-4 flex-shrink-0 self-center" />
+                                        <ArrowTrendingUpIcon className="h-4 w-4 flex-shrink-0 self-center" />
                                     ) : (
-                                        <TrendingDownIcon className="h-4 w-4 flex-shrink-0 self-center" />
+                                        <ArrowTrendingDownIcon className="h-4 w-4 flex-shrink-0 self-center" />
                                     )}
                                     <span className="sr-only">
                                         {changeType === "increase"

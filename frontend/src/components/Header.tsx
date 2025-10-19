@@ -4,8 +4,8 @@ import {
     BellIcon,
     MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useAuth } from "@/hooks/useAuth";
-import { useSystemHealth } from "@/hooks/useSystemHealth";
+import { useAuth } from "../hooks/useAuth";
+import { useSystemHealth } from "../hooks/useSystemHealth";
 import SystemStatus from "./SystemStatus";
 import UserMenu from "./UserMenu";
 

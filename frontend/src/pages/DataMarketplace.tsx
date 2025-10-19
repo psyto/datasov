@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { MagnifyingGlassIcon, FunnelIcon } from "@heroicons/react/24/outline";
-import { DataType } from "@/types";
-import { useDataListings } from "@/hooks/useDataListings";
-import DataListingCard from "@/components/DataListingCard";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { DataType } from "../types";
+import { useDataListings } from "../hooks/useDataListings";
+import DataListingCard from "../components/DataListingCard";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const DataMarketplace: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -30,8 +30,8 @@ const DataMarketplace: React.FC = () => {
             const matchesType =
                 filterType === "ALL" || listing.dataType === filterType;
             const matchesPrice =
-                listing.price >= priceRange.min &&
-                listing.price <= priceRange.max;
+                parseFloat(listing.price) >= priceRange.min &&
+                parseFloat(listing.price) <= priceRange.max;
 
             return matchesSearch && matchesType && matchesPrice;
         }) || [];

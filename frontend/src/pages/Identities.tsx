@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { PlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { IdentityType, IdentityStatus, VerificationLevel } from "@/types";
-import IdentityCard from "@/components/IdentityCard";
-import CreateIdentityModal from "@/components/CreateIdentityModal";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { IdentityType, IdentityStatus, VerificationLevel } from "../types";
+import IdentityCard from "../components/IdentityCard";
+import CreateIdentityModal from "../components/CreateIdentityModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Identities: React.FC = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -31,6 +31,7 @@ const Identities: React.FC = () => {
             accessPermissions: [],
             createdAt: Date.now() - 86400000, // 1 day ago
             verifiedAt: Date.now() - 3600000, // 1 hour ago
+            metadata: {},
         },
         {
             identityId: "ID_002",
@@ -47,6 +48,7 @@ const Identities: React.FC = () => {
             },
             accessPermissions: [],
             createdAt: Date.now() - 172800000, // 2 days ago
+            metadata: {},
         },
     ];
 

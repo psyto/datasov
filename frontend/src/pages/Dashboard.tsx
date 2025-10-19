@@ -3,13 +3,13 @@ import {
     ChartBarIcon,
     IdentificationIcon,
     ShoppingBagIcon,
-    DatabaseIcon,
+    CircleStackIcon,
 } from "@heroicons/react/24/outline";
-import { useSystemHealth } from "@/hooks/useSystemHealth";
-import { useDataListings } from "@/hooks/useDataListings";
-import StatsCard from "@/components/StatsCard";
-import RecentActivity from "@/components/RecentActivity";
-import DataListingsChart from "@/components/DataListingsChart";
+import { useSystemHealth } from "../hooks/useSystemHealth";
+import { useDataListings } from "../hooks/useDataListings";
+import StatsCard from "../components/StatsCard";
+import RecentActivity from "../components/RecentActivity";
+import DataListingsChart from "../components/DataListingsChart";
 
 const Dashboard: React.FC = () => {
     const { data: health } = useSystemHealth();
@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
             value: "1,234",
             change: 12,
             changeType: "increase" as const,
-            icon: DatabaseIcon,
+            icon: CircleStackIcon,
             description: "Total data transactions",
         },
         {
@@ -117,7 +117,7 @@ const Dashboard: React.FC = () => {
                             Register Identity
                         </button>
                         <button className="btn btn-secondary">
-                            <DatabaseIcon className="h-5 w-5 mr-2" />
+                            <CircleStackIcon className="h-5 w-5 mr-2" />
                             List Data
                         </button>
                         <button className="btn btn-outline">

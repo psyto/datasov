@@ -5,7 +5,7 @@ import {
     XCircleIcon,
     ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { DigitalIdentity, IdentityStatus, VerificationLevel } from "@/types";
+import { DigitalIdentity, IdentityStatus, VerificationLevel } from "../types";
 import { format } from "date-fns";
 
 interface IdentityCardProps {
@@ -113,15 +113,6 @@ const IdentityCard: React.FC<IdentityCardProps> = ({ identity }) => {
                             {identity.verificationLevel.toLowerCase()}
                         </span>
                     </div>
-
-                    {identity.emailAddress && (
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500">Email</span>
-                            <span className="text-sm font-medium text-gray-900">
-                                {identity.emailAddress}
-                            </span>
-                        </div>
-                    )}
                 </div>
 
                 {/* Timestamps */}

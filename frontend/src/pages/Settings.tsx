@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@/hooks/useAuth";
-import { User } from "@/types";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { useAuth } from "../hooks/useAuth";
+import { User } from "../types";
+import LoadingSpinner from "../components/LoadingSpinner";
 import toast from "react-hot-toast";
 
 interface SettingsFormData {
