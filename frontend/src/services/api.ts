@@ -31,9 +31,7 @@ class ApiService {
     private retryConfig: RetryConfig;
 
     constructor() {
-        this.mockMode =
-            process.env.REACT_APP_MOCK_MODE === "true" ||
-            process.env.NODE_ENV === "development";
+        this.mockMode = process.env.REACT_APP_MOCK_MODE === "true";
 
         this.retryConfig = {
             retries: 3,
@@ -53,6 +51,10 @@ class ApiService {
             timeout: 30000,
             headers: {
                 "Content-Type": "application/json",
+            },
+            validateStatus: (status) => {
+                // Accept all status codes to handle errors manually
+                return status >= 200 && status < 500;
             },
         });
 
