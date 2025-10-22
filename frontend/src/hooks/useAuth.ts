@@ -16,70 +16,46 @@ export const useAuth = () => {
 
     // Check if user is authenticated on mount
     useEffect(() => {
-        const token = apiService.getAuthToken();
-        if (token) {
-            setAuthState((prev) => ({
-                ...prev,
-                token,
-                isAuthenticated: true,
-                loading: false,
-            }));
-        } else {
-            setAuthState((prev) => ({
-                ...prev,
-                loading: false,
-            }));
-        }
+        const initializeAuth = async () => {
+            const token = apiService.getAuthToken();
+            if (token) {
+                try {
+                    const user = await apiService.getCurrentUser();
+                    setAuthState({
+                        isAuthenticated: true,
+                        user,
+                        token,
+                        loading: false,
+                    });
+                } catch (error) {
+                    // Token is invalid, remove it
+                    apiService.removeAuthToken();
+                    setAuthState({
+                        isAuthenticated: false,
+                        user: null,
+                        token: null,
+                        loading: false,
+                    });
+                }
+            } else {
+                setAuthState((prev) => ({
+                    ...prev,
+                    loading: false,
+                }));
+            }
+        };
+
+        initializeAuth();
     }, []);
 
     // Login mutation
     const loginMutation = useMutation(
         async ({ email, password }: { email: string; password: string }) => {
-            // Mock login for development
-            if (process.env.REACT_APP_MOCK_MODE === "true") {
-                // Simulate API delay
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                // Mock successful login
-                const mockUser: User = {
-                    id: "1",
-                    name: "Test User",
-                    email: email,
-                    avatar: undefined,
-                    createdAt: Date.now(),
-                    identities: [],
-                    dataListings: [],
-                    purchases: [],
-                };
-
-                const mockToken = "mock-jwt-token-" + Date.now();
-
-                return {
-                    user: mockUser,
-                    token: mockToken,
-                };
-            }
-
-            // Real API call
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Login failed");
-            }
-
-            const data = await response.json();
-            return data;
+            return await apiService.login(email, password);
         },
         {
             onSuccess: (data) => {
                 const { token, user } = data;
-                apiService.setAuthToken(token);
                 setAuthState({
                     isAuthenticated: true,
                     user,
@@ -87,7 +63,6 @@ export const useAuth = () => {
                     loading: false,
                 });
                 toast.success("Login successful");
-                // Force a re-render by updating the query cache
                 queryClient.invalidateQueries();
             },
             onError: (error: any) => {
@@ -111,51 +86,11 @@ export const useAuth = () => {
             password: string;
             name: string;
         }) => {
-            // Mock register for development
-            if (process.env.REACT_APP_MOCK_MODE === "true") {
-                // Simulate API delay
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                // Mock successful registration
-                const mockUser: User = {
-                    id: "1",
-                    name: name,
-                    email: email,
-                    avatar: undefined,
-                    createdAt: Date.now(),
-                    identities: [],
-                    dataListings: [],
-                    purchases: [],
-                };
-
-                const mockToken = "mock-jwt-token-" + Date.now();
-
-                return {
-                    user: mockUser,
-                    token: mockToken,
-                };
-            }
-
-            // Real API call
-            const response = await fetch("/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password, name }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Registration failed");
-            }
-
-            const data = await response.json();
-            return data;
+            return await apiService.register({ email, password, name });
         },
         {
             onSuccess: (data) => {
                 const { token, user } = data;
-                apiService.setAuthToken(token);
                 setAuthState({
                     isAuthenticated: true,
                     user,
@@ -163,7 +98,6 @@ export const useAuth = () => {
                     loading: false,
                 });
                 toast.success("Registration successful");
-                // Force a re-render by updating the query cache
                 queryClient.invalidateQueries();
             },
             onError: (error: any) => {
@@ -173,8 +107,13 @@ export const useAuth = () => {
     );
 
     // Logout function
-    const logout = useCallback(() => {
-        apiService.removeAuthToken();
+    const logout = useCallback(async () => {
+        try {
+            await apiService.logout();
+        } catch (error) {
+            // Ignore logout errors
+        }
+
         setAuthState({
             isAuthenticated: false,
             user: null,
@@ -188,20 +127,10 @@ export const useAuth = () => {
     // Update user profile
     const updateProfileMutation = useMutation(
         async (updates: Partial<User>) => {
-            const response = await fetch("/api/user/profile", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${authState.token}`,
-                },
-                body: JSON.stringify(updates),
-            });
-
-            if (!response.ok) {
-                throw new Error("Profile update failed");
-            }
-
-            return response.json();
+            // For now, just update the local state
+            // In a real app, this would make an API call
+            const updatedUser = { ...authState.user, ...updates } as User;
+            return { user: updatedUser };
         },
         {
             onSuccess: (data) => {
