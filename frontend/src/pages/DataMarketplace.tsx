@@ -4,6 +4,8 @@ import { DataType } from "../types";
 import { useDataListings } from "../hooks/useDataListings";
 import DataListingCard from "../components/DataListingCard";
 import LoadingSpinner from "../components/LoadingSpinner";
+import apiService from "../services/api";
+import toast from "react-hot-toast";
 
 const DataMarketplace: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -15,8 +17,29 @@ const DataMarketplace: React.FC = () => {
         min: 0,
         max: 1000,
     });
+    const [purchasingListingId, setPurchasingListingId] = useState<
+        number | null
+    >(null);
 
     const { listings, isLoading, refetch } = useDataListings();
+
+    const handlePurchase = async (listingId: number) => {
+        setPurchasingListingId(listingId);
+        try {
+            await apiService.purchaseData({
+                buyer: "demo@datasov.com",
+                listingId,
+                tokenMint: `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                cordaIdentityId: "ID_001",
+            });
+            toast.success("Data purchased successfully!");
+            refetch(); // Refresh listings to show updated status
+        } catch (error: any) {
+            toast.error(error.message || "Failed to purchase data");
+        } finally {
+            setPurchasingListingId(null);
+        }
+    };
 
     const filteredListings =
         listings?.filter((listing) => {
@@ -227,7 +250,12 @@ const DataMarketplace: React.FC = () => {
             {/* Listings Grid */}
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {sortedListings.map((listing) => (
-                    <DataListingCard key={listing.id} listing={listing} />
+                    <DataListingCard
+                        key={listing.id}
+                        listing={listing}
+                        onPurchase={handlePurchase}
+                        isPurchasing={purchasingListingId === listing.id}
+                    />
                 ))}
             </div>
 

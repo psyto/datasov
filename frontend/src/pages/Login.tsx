@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../hooks/useAuth";
@@ -12,12 +12,22 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const { login, isLoggingIn } = useAuth();
+    const { login, isLoggingIn, isAuthenticated } = useAuth();
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<LoginFormData>();
+
+    // Redirect to dashboard if already authenticated
+    useEffect(() => {
+        console.log("Login page - isAuthenticated:", isAuthenticated);
+        if (isAuthenticated) {
+            console.log("User authenticated, redirecting to dashboard");
+            navigate("/dashboard", { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
 
     const onSubmit = (data: LoginFormData) => {
         login(data);

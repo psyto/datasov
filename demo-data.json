@@ -1,0 +1,154 @@
+{
+    "identities": [
+        {
+            "identityId": "USER_001",
+            "owner": "Taro Yamada",
+            "identityProvider": "NTT DOCOMO",
+            "identityType": "NTT_DOCOMO_USER_ID",
+            "status": "VERIFIED",
+            "verificationLevel": "ENHANCED",
+            "personalInfo": {
+                "firstName": "Taro",
+                "lastName": "Yamada",
+                "dateOfBirth": "1990-01-01",
+                "nationality": "Japanese",
+                "address": "Tokyo, Japan",
+                "phoneNumber": "+81-90-1234-5678",
+                "emailAddress": "taro.yamada@example.com"
+            },
+            "accessPermissions": [
+                {
+                    "consumer": "Data Analytics Corp",
+                    "permissionType": "READ_ONLY",
+                    "dataTypes": ["LOCATION_HISTORY", "APP_USAGE"],
+                    "grantedAt": "2025-10-20T00:00:00Z",
+                    "expiresAt": "2025-11-20T00:00:00Z",
+                    "isActive": true
+                }
+            ],
+            "createdAt": "2025-10-15T00:00:00Z",
+            "verifiedAt": "2025-10-16T00:00:00Z"
+        },
+        {
+            "identityId": "USER_002",
+            "owner": "Hanako Sato",
+            "identityProvider": "Government Digital ID",
+            "identityType": "GOVERNMENT_DIGITAL_ID",
+            "status": "VERIFIED",
+            "verificationLevel": "HIGH",
+            "personalInfo": {
+                "firstName": "Hanako",
+                "lastName": "Sato",
+                "dateOfBirth": "1985-05-15",
+                "nationality": "Japanese",
+                "address": "Osaka, Japan",
+                "phoneNumber": "+81-90-9876-5432",
+                "emailAddress": "hanako.sato@example.com"
+            },
+            "accessPermissions": [
+                {
+                    "consumer": "Health Research Institute",
+                    "permissionType": "READ_ONLY",
+                    "dataTypes": ["HEALTH_DATA"],
+                    "grantedAt": "2025-10-18T00:00:00Z",
+                    "expiresAt": "2025-12-18T00:00:00Z",
+                    "isActive": true
+                }
+            ],
+            "createdAt": "2025-10-10T00:00:00Z",
+            "verifiedAt": "2025-10-12T00:00:00Z"
+        }
+    ],
+    "dataListings": [
+        {
+            "id": 1,
+            "owner": "USER_001",
+            "price": 0.1,
+            "dataType": "LOCATION_HISTORY",
+            "description": "Anonymized location data from smartphone usage over 3 months",
+            "isActive": true,
+            "createdAt": "2025-10-20T00:00:00Z",
+            "dataPoints": 1500,
+            "timeRange": "3 months",
+            "anonymizationLevel": "HIGH"
+        },
+        {
+            "id": 2,
+            "owner": "USER_001",
+            "price": 0.05,
+            "dataType": "APP_USAGE",
+            "description": "Application usage patterns and statistics",
+            "isActive": true,
+            "createdAt": "2025-10-21T00:00:00Z",
+            "dataPoints": 500,
+            "timeRange": "1 month",
+            "anonymizationLevel": "MEDIUM"
+        },
+        {
+            "id": 3,
+            "owner": "USER_002",
+            "price": 0.2,
+            "dataType": "HEALTH_DATA",
+            "description": "Fitness and health metrics for research",
+            "isActive": true,
+            "createdAt": "2025-10-22T00:00:00Z",
+            "dataPoints": 2000,
+            "timeRange": "6 months",
+            "anonymizationLevel": "HIGH"
+        }
+    ],
+    "transactions": [
+        {
+            "id": "TX_001",
+            "buyer": "Data Analytics Corp",
+            "seller": "USER_001",
+            "listingId": 1,
+            "amount": 0.1,
+            "fee": 0.0025,
+            "netAmount": 0.0975,
+            "timestamp": "2025-10-20T10:30:00Z",
+            "status": "COMPLETED"
+        },
+        {
+            "id": "TX_002",
+            "buyer": "Health Research Institute",
+            "seller": "USER_002",
+            "listingId": 3,
+            "amount": 0.2,
+            "fee": 0.005,
+            "netAmount": 0.195,
+            "timestamp": "2025-10-22T14:15:00Z",
+            "status": "COMPLETED"
+        }
+    ],
+    "marketplaceStats": {
+        "totalListings": 3,
+        "activeListings": 3,
+        "totalVolume": 0.3,
+        "totalFees": 0.0075,
+        "averagePrice": 0.1167,
+        "topDataTypes": [
+            { "type": "LOCATION_HISTORY", "count": 1, "volume": 0.1 },
+            { "type": "HEALTH_DATA", "count": 1, "volume": 0.2 },
+            { "type": "APP_USAGE", "count": 1, "volume": 0.05 }
+        ]
+    },
+    "systemHealth": {
+        "status": "healthy",
+        "corda": {
+            "status": "connected",
+            "nodes": 4,
+            "lastSync": "2025-10-23T07:00:00Z"
+        },
+        "solana": {
+            "status": "connected",
+            "cluster": "localnet",
+            "lastSync": "2025-10-23T07:00:00Z"
+        },
+        "integration": {
+            "status": "running",
+            "uptime": "2h 30m",
+            "lastSync": "2025-10-23T07:00:00Z"
+        }
+    }
+}

@@ -56,6 +56,7 @@ export const useAuth = () => {
         {
             onSuccess: (data) => {
                 const { token, user } = data;
+                console.log("Login successful, updating auth state");
                 setAuthState({
                     isAuthenticated: true,
                     user,

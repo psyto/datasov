@@ -19,8 +19,8 @@ interface SidebarProps {
 const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
     { name: "Identities", href: "/identities", icon: IdentificationIcon },
-    { name: "Marketplace", href: "/marketplace", icon: ShoppingBagIcon },
     { name: "My Data", href: "/my-data", icon: CircleStackIcon },
+    { name: "Marketplace", href: "/marketplace", icon: ShoppingBagIcon },
     { name: "Analytics", href: "/analytics", icon: ChartBarIcon },
     { name: "Settings", href: "/settings", icon: CogIcon },
 ];

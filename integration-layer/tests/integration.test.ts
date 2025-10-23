@@ -9,7 +9,7 @@ import { CordaService } from "../src/services/CordaService";
 import { SolanaService } from "../src/services/SolanaService";
 import { CrossChainBridge } from "../src/services/CrossChainBridge";
 import { ApiGateway } from "../src/api/index";
-import { BridgeConfig } from "../src/types";
+import { BridgeConfig, VerificationLevel } from "../src/types";
 
 describe("DataSov Integration Layer", () => {
     let integrationLayer: DataSovIntegrationLayer;
@@ -146,10 +146,11 @@ describe("DataSov Integration Layer", () => {
             const mockProof = {
                 identityId: "USER_12345",
                 owner: "test_owner",
-                verificationLevel: "ENHANCED",
+                verificationLevel: VerificationLevel.ENHANCED,
                 verificationTimestamp: Date.now(),
                 cordaTransactionHash: "mock_tx_hash",
                 signature: "mock_signature",
+                metadata: {},
             };
 
             // This would test actual proof validation
@@ -330,17 +331,14 @@ describe("Cross-Chain Bridge", () => {
         const mockProof = {
             identityId: "USER_12345",
             owner: "test_owner",
-            verificationLevel: "ENHANCED",
+            verificationLevel: VerificationLevel.ENHANCED,
             verificationTimestamp: Date.now(),
             cordaTransactionHash: "mock_tx_hash",
             signature: "mock_signature",
+            metadata: {},
         };
 
         const result = await bridge.validateIdentityProof(mockProof);
         expect(result).toBeDefined();
     });
 });
-
-
-
-

@@ -6,6 +6,7 @@ edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
+path = "programs/datasov-solana/src/lib.rs"
 name = "datasov_solana"
 
 [features]
@@ -21,3 +22,6 @@ anchor-spl = "0.29.0"
 solana-program = "~1.16.0"
 spl-token = "4.0.0"
 spl-associated-token-account = "2.0.0"
+
+[profile.release]
+overflow-checks = true

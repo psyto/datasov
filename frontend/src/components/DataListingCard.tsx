@@ -14,6 +14,8 @@ interface DataListingCardProps {
     showActions?: boolean;
     onEdit?: () => void;
     onCancel?: () => void;
+    onPurchase?: (listingId: number) => void;
+    isPurchasing?: boolean;
 }
 
 const DataListingCard: React.FC<DataListingCardProps> = ({
@@ -21,6 +23,8 @@ const DataListingCard: React.FC<DataListingCardProps> = ({
     showActions = false,
     onEdit,
     onCancel,
+    onPurchase,
+    isPurchasing = false,
 }) => {
     const getDataTypeIcon = (type: DataType) => {
         // Return appropriate icon based on data type
@@ -157,14 +161,30 @@ const DataListingCard: React.FC<DataListingCardProps> = ({
                 )}
 
                 {/* Purchase Button for Marketplace */}
-                {!showActions && listing.isActive && !listing.soldAt && (
-                    <div className="mt-4">
-                        <button className="w-full btn btn-primary">
-                            <CurrencyDollarIcon className="h-4 w-4 mr-2" />
-                            Purchase Data
-                        </button>
-                    </div>
-                )}
+                {!showActions &&
+                    listing.isActive &&
+                    !listing.soldAt &&
+                    onPurchase && (
+                        <div className="mt-4">
+                            <button
+                                onClick={() => onPurchase(listing.id)}
+                                disabled={isPurchasing}
+                                className="w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isPurchasing ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                        Purchasing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <CurrencyDollarIcon className="h-4 w-4 mr-2" />
+                                        Purchase Data
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    )}
             </div>
         </div>
     );

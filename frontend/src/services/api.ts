@@ -17,6 +17,7 @@ import {
     IdentityStatus,
     VerificationLevel,
     DataType,
+    PersonalInfo,
 } from "../types";
 
 interface RetryConfig {
@@ -29,9 +30,13 @@ class ApiService {
     private api: AxiosInstance;
     private mockMode: boolean;
     private retryConfig: RetryConfig;
+    private mockListings: DataListing[] = [];
+    private mockIdentities: DigitalIdentity[] = [];
 
     constructor() {
-        this.mockMode = process.env.REACT_APP_MOCK_MODE === "true";
+        this.mockMode = true; // Always use mock mode for demo
+        this.mockListings = this.getMockDataListings(); // Initialize mock data
+        this.mockIdentities = this.getMockIdentities(); // Initialize mock identities
 
         this.retryConfig = {
             retries: 3,
@@ -150,22 +155,29 @@ class ApiService {
         if (this.mockMode) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
 
-            const mockUser: User = {
-                id: "user_123",
-                email: email,
-                name: "Demo User",
-                avatar: "https://via.placeholder.com/40",
-                identities: this.getMockIdentities(),
-                dataListings: this.getMockDataListings(),
-                purchases: this.getMockPurchases(),
-                createdAt: Date.now() - 86400000 * 30,
-                lastLoginAt: Date.now(),
-            };
+            // Demo credentials validation
+            if (email === "demo@datasov.com" && password === "password123") {
+                const mockUser: User = {
+                    id: "user_123",
+                    email: email,
+                    name: "Demo User",
+                    avatar: "https://via.placeholder.com/40",
+                    identities: this.getMockIdentities(),
+                    dataListings: this.getMockDataListings(),
+                    purchases: this.getMockPurchases(),
+                    createdAt: Date.now() - 86400000 * 30,
+                    lastLoginAt: Date.now(),
+                };
 
-            const token = `mock_token_${Date.now()}`;
-            this.setAuthToken(token);
+                const token = `mock_token_${Date.now()}`;
+                this.setAuthToken(token);
 
-            return { user: mockUser, token };
+                return { user: mockUser, token };
+            } else {
+                throw new Error(
+                    "Invalid credentials. Use demo@datasov.com / password123"
+                );
+            }
         }
 
         const response = await this.api.post<
@@ -279,9 +291,86 @@ class ApiService {
     }
 
     // Identity Management
+    async createIdentity(identityData: {
+        owner: string;
+        identityProvider: string;
+        identityType: IdentityType;
+        personalInfo: PersonalInfo;
+    }): Promise<{ identityId: string; transactionHash: string }> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            // Generate new identity ID
+            const identityId = `ID_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+            const transactionHash = `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+            // Create new identity
+            const newIdentity: DigitalIdentity = {
+                identityId,
+                owner: identityData.owner,
+                identityProvider: identityData.identityProvider,
+                identityType: identityData.identityType,
+                status: IdentityStatus.PENDING,
+                verificationLevel: VerificationLevel.BASIC,
+                personalInfo: identityData.personalInfo,
+                accessPermissions: [],
+                createdAt: Date.now(),
+                metadata: {},
+            };
+
+            this.mockIdentities.unshift(newIdentity); // Add to beginning of array
+
+            return { identityId, transactionHash };
+        }
+
+        const response = await this.api.post<
+            ApiResponse<{ identityId: string; transactionHash: string }>
+        >("/identity", identityData);
+        return response.data.data!;
+    }
+
     async getIdentity(identityId: string): Promise<DigitalIdentity> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            // Get from dynamic mock data
+            const identity = this.mockIdentities.find(
+                (i) => i.identityId === identityId
+            );
+
+            if (!identity) {
+                throw new Error(`Identity with ID ${identityId} not found`);
+            }
+
+            return identity;
+        }
+
         const response = await this.api.get<ApiResponse<DigitalIdentity>>(
             `/identity/${identityId}`
+        );
+        return response.data.data!;
+    }
+
+    async getIdentities(owner?: string): Promise<DigitalIdentity[]> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            // Filter by owner if specified
+            const filteredIdentities = owner
+                ? this.mockIdentities.filter(
+                      (identity) => identity.owner === owner
+                  )
+                : this.mockIdentities;
+
+            return filteredIdentities;
+        }
+
+        const response = await this.api.get<ApiResponse<DigitalIdentity[]>>(
+            "/identities",
+            { params: { owner } }
         );
         return response.data.data!;
     }
@@ -330,6 +419,31 @@ class ApiService {
     async createDataListing(
         request: CreateDataListingRequest
     ): Promise<{ transactionHash: string }> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+
+            // Generate mock transaction hash
+            const transactionHash = `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+            // Create new listing and add to mock data
+            const newListing: DataListing = {
+                id: Math.max(...this.mockListings.map((l) => l.id), 0) + 1,
+                owner: request.owner,
+                price: request.price,
+                dataType: request.dataType,
+                description: request.description,
+                isActive: true,
+                createdAt: Date.now(),
+                cordaIdentityId: request.cordaIdentityId,
+                accessProof: undefined,
+            };
+
+            this.mockListings.unshift(newListing); // Add to beginning of array
+
+            return { transactionHash };
+        }
+
         const response = await this.api.post<
             ApiResponse<{ transactionHash: string }>
         >("/data/listing", request);
@@ -337,6 +451,20 @@ class ApiService {
     }
 
     async getDataListing(listingId: number): Promise<DataListing> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            // Get from dynamic mock data
+            const listing = this.mockListings.find((l) => l.id === listingId);
+
+            if (!listing) {
+                throw new Error(`Data listing with ID ${listingId} not found`);
+            }
+
+            return listing;
+        }
+
         const response = await this.api.get<ApiResponse<DataListing>>(
             `/data/listing/${listingId}`
         );
@@ -352,14 +480,12 @@ class ApiService {
             // Simulate API delay
             await new Promise((resolve) => setTimeout(resolve, 800));
 
-            const mockListings = this.getMockDataListings();
-
             // Filter by owner if specified
             const filteredListings = params?.owner
-                ? mockListings.filter(
+                ? this.mockListings.filter(
                       (listing) => listing.owner === params.owner
                   )
-                : mockListings;
+                : this.mockListings;
 
             // Pagination
             const page = params?.page || 1;
@@ -398,6 +524,27 @@ class ApiService {
         listingId: number,
         request: UpdateDataListingRequest
     ): Promise<{ transactionHash: string }> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            // Update the listing in mock data
+            const listingIndex = this.mockListings.findIndex(
+                (l) => l.id === listingId
+            );
+            if (listingIndex !== -1) {
+                this.mockListings[listingIndex] = {
+                    ...this.mockListings[listingIndex],
+                    price: request.newPrice,
+                };
+            }
+
+            // Generate mock transaction hash
+            const transactionHash = `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+            return { transactionHash };
+        }
+
         const response = await this.api.put<
             ApiResponse<{ transactionHash: string }>
         >(`/data/listing/${listingId}`, request);
@@ -408,6 +555,24 @@ class ApiService {
         listingId: number,
         request: CancelDataListingRequest
     ): Promise<{ transactionHash: string }> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            // Remove the listing from mock data
+            const listingIndex = this.mockListings.findIndex(
+                (l) => l.id === listingId
+            );
+            if (listingIndex !== -1) {
+                this.mockListings.splice(listingIndex, 1);
+            }
+
+            // Generate mock transaction hash
+            const transactionHash = `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+            return { transactionHash };
+        }
+
         const response = await this.api.delete<
             ApiResponse<{ transactionHash: string }>
         >(`/data/listing/${listingId}`, {
@@ -418,6 +583,27 @@ class ApiService {
 
     // Data Purchases
     async purchaseData(request: PurchaseDataRequest): Promise<DataPurchase> {
+        if (this.mockMode) {
+            // Simulate API delay
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            // Get the listing to get the price
+            const listing = await this.getDataListing(request.listingId);
+
+            // Generate mock purchase data
+            const mockPurchase: DataPurchase = {
+                listingId: request.listingId,
+                buyer: request.buyer,
+                amount: listing.price,
+                timestamp: Date.now(),
+                transactionHash: `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                cordaIdentityId: request.cordaIdentityId,
+                accessGranted: true,
+            };
+
+            return mockPurchase;
+        }
+
         const response = await this.api.post<ApiResponse<DataPurchase>>(
             "/data/purchase",
             request
@@ -427,21 +613,50 @@ class ApiService {
 
     // Synchronization
     async startSync(): Promise<any> {
+        if (this.mockMode) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            return { status: "started", timestamp: Date.now() };
+        }
+
         const response = await this.api.post<ApiResponse>("/sync/start");
         return response.data.data;
     }
 
     async stopSync(): Promise<any> {
+        if (this.mockMode) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            return { status: "stopped", timestamp: Date.now() };
+        }
+
         const response = await this.api.post<ApiResponse>("/sync/stop");
         return response.data.data;
     }
 
     async getSyncStatus(): Promise<any> {
+        if (this.mockMode) {
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            return {
+                status: "running",
+                lastSync: Date.now() - 30000,
+                nextSync: Date.now() + 300000,
+            };
+        }
+
         const response = await this.api.get<ApiResponse>("/sync/status");
         return response.data.data;
     }
 
     async getStateSnapshot(): Promise<any> {
+        if (this.mockMode) {
+            await new Promise((resolve) => setTimeout(resolve, 800));
+            return {
+                timestamp: Date.now(),
+                cordaState: { identities: 2, transactions: 5 },
+                solanaState: { listings: 3, purchases: 2 },
+                bridgeState: { connected: true, lastSync: Date.now() },
+            };
+        }
+
         const response = await this.api.get<ApiResponse>("/state/snapshot");
         return response.data.data;
     }

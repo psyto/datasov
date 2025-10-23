@@ -8,6 +8,13 @@ import toast from "react-hot-toast";
 interface CreateIdentityModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onCreateIdentity: (identityData: {
+        owner: string;
+        identityProvider: string;
+        identityType: IdentityType;
+        personalInfo: any;
+    }) => void;
+    isCreating: boolean;
 }
 
 interface IdentityFormData {
@@ -25,9 +32,9 @@ interface IdentityFormData {
 const CreateIdentityModal: React.FC<CreateIdentityModalProps> = ({
     isOpen,
     onClose,
+    onCreateIdentity,
+    isCreating,
 }) => {
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
     const {
         register,
         handleSubmit,
@@ -41,23 +48,33 @@ const CreateIdentityModal: React.FC<CreateIdentityModalProps> = ({
     });
 
     const onSubmit = async (data: IdentityFormData) => {
-        setIsSubmitting(true);
         try {
-            // Mock API call - replace with actual implementation
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            const identityData = {
+                owner: "demo@datasov.com", // Use current user email
+                identityProvider: "DataSov Platform",
+                identityType: data.identityType,
+                personalInfo: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    emailAddress: data.email,
+                    phoneNumber: data.phoneNumber,
+                    dateOfBirth: data.dateOfBirth,
+                    nationality: data.nationality,
+                    address: data.address,
+                    encryptedData: {},
+                },
+            };
 
-            toast.success("Identity registration initiated successfully");
+            onCreateIdentity(identityData);
             reset();
             onClose();
         } catch (error) {
             toast.error("Failed to register identity");
-        } finally {
-            setIsSubmitting(false);
         }
     };
 
     const handleClose = () => {
-        if (!isSubmitting) {
+        if (!isCreating) {
             reset();
             onClose();
         }
@@ -86,7 +103,7 @@ const CreateIdentityModal: React.FC<CreateIdentityModalProps> = ({
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    disabled={isSubmitting}
+                                    disabled={isCreating}
                                     className="text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                 >
                                     <XMarkIcon className="h-6 w-6" />
@@ -351,10 +368,10 @@ const CreateIdentityModal: React.FC<CreateIdentityModalProps> = ({
                         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                             <button
                                 type="submit"
-                                disabled={isSubmitting}
+                                disabled={isCreating}
                                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {isSubmitting ? (
+                                {isCreating ? (
                                     <LoadingSpinner size="sm" />
                                 ) : (
                                     "Register Identity"
@@ -363,7 +380,7 @@ const CreateIdentityModal: React.FC<CreateIdentityModalProps> = ({
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                disabled={isSubmitting}
+                                disabled={isCreating}
                                 className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Cancel

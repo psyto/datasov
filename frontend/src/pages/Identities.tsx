@@ -4,6 +4,8 @@ import { IdentityType, IdentityStatus, VerificationLevel } from "../types";
 import IdentityCard from "../components/IdentityCard";
 import CreateIdentityModal from "../components/CreateIdentityModal";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useIdentities } from "../hooks/useIdentities";
+import { useAuth } from "../hooks/useAuth";
 
 const Identities: React.FC = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -13,44 +15,18 @@ const Identities: React.FC = () => {
     );
     const [filterType, setFilterType] = useState<IdentityType | "ALL">("ALL");
 
-    // Mock data - replace with actual API calls
-    const identities = [
-        {
-            identityId: "ID_001",
-            owner: "user@example.com",
-            identityProvider: "NTT DOCOMO",
-            identityType: IdentityType.NTT_DOCOMO_USER_ID,
-            status: IdentityStatus.VERIFIED,
-            verificationLevel: VerificationLevel.HIGH,
-            personalInfo: {
-                firstName: "Taro",
-                lastName: "Yamada",
-                emailAddress: "taro.yamada@example.com",
-                encryptedData: {},
-            },
-            accessPermissions: [],
-            createdAt: Date.now() - 86400000, // 1 day ago
-            verifiedAt: Date.now() - 3600000, // 1 hour ago
-            metadata: {},
-        },
-        {
-            identityId: "ID_002",
-            owner: "user@example.com",
-            identityProvider: "Government",
-            identityType: IdentityType.GOVERNMENT_DIGITAL_ID,
-            status: IdentityStatus.PENDING,
-            verificationLevel: VerificationLevel.BASIC,
-            personalInfo: {
-                firstName: "Hanako",
-                lastName: "Sato",
-                emailAddress: "hanako.sato@example.com",
-                encryptedData: {},
-            },
-            accessPermissions: [],
-            createdAt: Date.now() - 172800000, // 2 days ago
-            metadata: {},
-        },
-    ];
+    const { user } = useAuth();
+    const { identities, isLoading, createIdentity, isCreating } = useIdentities(
+        user?.email
+    );
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <LoadingSpinner />
+            </div>
+        );
+    }
 
     const filteredIdentities = identities.filter((identity) => {
         const matchesSearch =
@@ -249,6 +225,8 @@ const Identities: React.FC = () => {
                 <CreateIdentityModal
                     isOpen={showCreateModal}
                     onClose={() => setShowCreateModal(false)}
+                    onCreateIdentity={createIdentity}
+                    isCreating={isCreating}
                 />
             )}
         </div>
