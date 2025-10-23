@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Solana test ledger (large files)
+test-ledger/
+**/test-ledger/
+
+# Corda
+corda-component/build/
+corda-component/.gradle/
+corda-component/gradle/wrapper/gradle-wrapper.jar
+
+# Solana
+solana-component/target/
+solana-component/.anchor/
+solana-component/.cargo/
+
+# Integration Layer
+integration-layer/build/
+integration-layer/dist/
+
+# Frontend
+frontend/build/
+frontend/dist/
+
+# Temporary files
+*.tmp
+*.temp
