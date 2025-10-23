@@ -21,11 +21,19 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
 }) => {
     const { isAuthenticated, loading } = useAuth();
 
+    console.log(
+        "ProtectedRoute - isAuthenticated:",
+        isAuthenticated,
+        "loading:",
+        loading
+    );
+
     if (loading) {
         return <LoadingSpinner />;
     }
 
     if (!isAuthenticated) {
+        console.log("User not authenticated, redirecting to login");
         return <Navigate to="/login" replace />;
     }
 

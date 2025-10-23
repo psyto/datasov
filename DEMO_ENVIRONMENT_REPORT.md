@@ -1,285 +1,285 @@
-# DataSov デモ環境構築レポート
+# DataSov Demo Environment Setup Report
 
-## 実行日時
+## Execution Date
 
-2025 年 10 月 23 日
+October 23, 2025
 
-## デモ環境の状況
+## Demo Environment Status
 
-### ✅ 正常に動作しているコンポーネント
+### ✅ Components Running Successfully
 
-#### 1. Solana ローカルバリデータ
+#### 1. Solana Local Validator
 
--   **ステータス**: ✅ 動作中
--   **プロセス ID**: 10242
--   **ポート**: デフォルト（8899）
--   **コマンド**: `solana-test-validator --reset`
--   **説明**: Solana のローカルテストネットワークが正常に動作中
+-   **Status**: ✅ Running
+-   **Process ID**: 10242
+-   **Port**: Default (8899)
+-   **Command**: `solana-test-validator --reset`
+-   **Description**: Solana local test network is running successfully
 
-#### 2. フロントエンド（React）
+#### 2. Frontend (React)
 
--   **ステータス**: ✅ 動作中
--   **プロセス ID**: 14971
--   **ポート**: 3000
+-   **Status**: ✅ Running
+-   **Process ID**: 14971
+-   **Port**: 3000
 -   **URL**: http://localhost:3000
--   **説明**: React 開発サーバーが正常に動作中
+-   **Description**: React development server is running successfully
 
-### ⚠️ 部分的な問題があるコンポーネント
+### ⚠️ Components with Partial Issues
 
-#### 3. Corda ネットワーク
+#### 3. Corda Network
 
--   **ステータス**: ⚠️ 未起動
--   **問題**: Corda プラグインの依存関係の問題
--   **詳細**:
-    -   Gradle 9.1.0 と Corda プラグインの互換性問題
-    -   `net.corda.plugins.cordapp`プラグインが見つからない
-    -   Java 25 と Corda 4.9 の互換性問題
+-   **Status**: ⚠️ Not Started
+-   **Issue**: Corda plugin dependency problems
+-   **Details**:
+    -   Gradle 9.1.0 and Corda plugin compatibility issues
+    -   `net.corda.plugins.cordapp` plugin not found
+    -   Java 25 and Corda 4.9 compatibility issues
 
-#### 4. Solana コンポーネント
+#### 4. Solana Component
 
--   **ステータス**: ⚠️ ビルド問題
--   **問題**: Anchor CLI のバージョン不一致
--   **詳細**:
-    -   期待バージョン: 0.31.2
-    -   実際のバージョン: 0.31.1
-    -   Rust コンパイラのバージョン問題
+-   **Status**: ⚠️ Build Issues
+-   **Issue**: Anchor CLI version mismatch
+-   **Details**:
+    -   Expected version: 0.31.2
+    -   Actual version: 0.31.1
+    -   Rust compiler version issues
 
-#### 5. 統合レイヤー
+#### 5. Integration Layer
 
--   **ステータス**: ⚠️ ビルドエラー
--   **問題**: TypeScript コンパイルエラー
--   **詳細**:
-    -   `corda-rpc`パッケージが見つからない
-    -   型定義の不整合
-    -   依存関係の問題
+-   **Status**: ⚠️ Build Errors
+-   **Issue**: TypeScript compilation errors
+-   **Details**:
+    -   `corda-rpc` package not found
+    -   Type definition inconsistencies
+    -   Dependency issues
 
-## デモ環境のアクセス方法
+## Demo Environment Access Methods
 
-### フロントエンドアクセス
+### Frontend Access
 
 ```bash
-# ブラウザでアクセス
+# Access via browser
 open http://localhost:3000
 ```
 
-### Solana ネットワークアクセス
+### Solana Network Access
 
 ```bash
-# Solana CLIで接続
+# Connect using Solana CLI
 solana config set --url localhost
 solana balance
 ```
 
-## デモデータ
+## Demo Data
 
-### 準備済みのサンプルデータ
+### Prepared Sample Data
 
--   **ファイル**: `/Users/hiroyusai/src/datasov/demo-data.json`
--   **内容**:
-    -   2 つの検証済みアイデンティティ
-    -   3 つのデータリスティング
-    -   2 つの取引履歴
-    -   マーケットプレイス統計
-    -   システムヘルス情報
+-   **File**: `/Users/hiroyusai/src/datasov/demo-data.json`
+-   **Contents**:
+    -   2 verified identities
+    -   3 data listings
+    -   2 transaction histories
+    -   Marketplace statistics
+    -   System health information
 
-### サンプルアイデンティティ
+### Sample Identities
 
 1. **USER_001 (Taro Yamada)**
 
-    - プロバイダー: NTT DOCOMO
-    - 検証レベル: ENHANCED
-    - データタイプ: 位置情報、アプリ使用状況
+    - Provider: NTT DOCOMO
+    - Verification Level: ENHANCED
+    - Data Types: Location data, app usage
 
 2. **USER_002 (Hanako Sato)**
-    - プロバイダー: Government Digital ID
-    - 検証レベル: HIGH
-    - データタイプ: 健康データ
+    - Provider: Government Digital ID
+    - Verification Level: HIGH
+    - Data Types: Health data
 
-### サンプルデータリスティング
+### Sample Data Listings
 
-1. **位置情報データ** (0.1 SOL)
+1. **Location Data** (0.1 SOL)
 
-    - 3 ヶ月分のスマートフォン位置データ
-    - 1,500 データポイント
-    - 高匿名化レベル
+    - 3 months of smartphone location data
+    - 1,500 data points
+    - High anonymization level
 
-2. **アプリ使用状況データ** (0.05 SOL)
+2. **App Usage Data** (0.05 SOL)
 
-    - 1 ヶ月分のアプリ使用パターン
-    - 500 データポイント
-    - 中匿名化レベル
+    - 1 month of app usage patterns
+    - 500 data points
+    - Medium anonymization level
 
-3. **健康データ** (0.2 SOL)
-    - 6 ヶ月分のフィットネス・健康メトリクス
-    - 2,000 データポイント
-    - 高匿名化レベル
+3. **Health Data** (0.2 SOL)
+    - 6 months of fitness and health metrics
+    - 2,000 data points
+    - High anonymization level
 
-## デモンストレーション可能な機能
+## Demonstrable Features
 
-### ✅ 完全に動作する機能
+### ✅ Fully Functional Features
 
-1. **フロントエンド UI**
+1. **Frontend UI**
 
-    - ダッシュボード表示
-    - アイデンティティ管理画面
-    - データマーケットプレイス
-    - アナリティクス画面
-    - 設定画面
+    - Dashboard display
+    - Identity management screen
+    - Data marketplace
+    - Analytics screen
+    - Settings screen
 
-2. **Solana ネットワーク**
-    - ローカルバリデータの動作
-    - トランザクション処理
-    - アカウント管理
+2. **Solana Network**
+    - Local validator operation
+    - Transaction processing
+    - Account management
 
-### ⚠️ 制限がある機能
+### ⚠️ Features with Limitations
 
-1. **Corda 統合**
+1. **Corda Integration**
 
-    - アイデンティティ認証（モックデータで代替可能）
-    - アクセス制御（フロントエンドでシミュレーション可能）
+    - Identity authentication (can be substituted with mock data)
+    - Access control (can be simulated in frontend)
 
-2. **クロスチェーン統合**
-    - 実際の Corda-Solana 連携（統合レイヤーの問題により制限）
-    - リアルタイム同期（モックデータで代替可能）
+2. **Cross-chain Integration**
+    - Actual Corda-Solana integration (limited due to integration layer issues)
+    - Real-time synchronization (can be substituted with mock data)
 
-## ハッカソン向けのデモ戦略
+## Demo Strategy for Hackathon
 
-### 推奨デモフロー
+### Recommended Demo Flow
 
-1. **問題提起** (2 分)
+1. **Problem Statement** (2 minutes)
 
-    - データ所有権の問題
-    - プライバシー保護の重要性
-    - 現在のデータマーケットの課題
+    - Data ownership issues
+    - Importance of privacy protection
+    - Current data marketplace challenges
 
-2. **ソリューション紹介** (3 分)
+2. **Solution Introduction** (3 minutes)
 
-    - ハイブリッドブロックチェーンアーキテクチャ
-    - Corda のセキュリティとプライバシー
-    - Solana の高速・低コスト取引
+    - Hybrid blockchain architecture
+    - Corda's security and privacy
+    - Solana's high-speed, low-cost transactions
 
-3. **技術デモ** (5 分)
+3. **Technical Demo** (5 minutes)
 
-    - フロントエンド UI の操作
-    - アイデンティティ登録フロー
-    - データリスティング作成
-    - 取引実行
-    - アナリティクス表示
+    - Frontend UI operation
+    - Identity registration flow
+    - Data listing creation
+    - Transaction execution
+    - Analytics display
 
-4. **ビジネス価値** (2 分)
-    - ユーザーのデータ所有権
-    - 透明な収益分配
-    - 規制遵守
+4. **Business Value** (2 minutes)
+    - User data ownership
+    - Transparent revenue distribution
+    - Regulatory compliance
 
-### デモの準備事項
+### Demo Preparation Items
 
-1. **事前準備**
+1. **Pre-demo Setup**
 
-    - ブラウザで http://localhost:3000 を開く
-    - デモデータの確認
-    - スクリーンショットの準備
+    - Open http://localhost:3000 in browser
+    - Verify demo data
+    - Prepare screenshots
 
-2. **バックアップ計画**
-    - モックデータでの完全なデモ
-    - アーキテクチャ図の説明
-    - 実装コードの紹介
+2. **Backup Plan**
+    - Complete demo with mock data
+    - Architecture diagram explanation
+    - Implementation code presentation
 
-## 技術的な課題と解決策
+## Technical Challenges and Solutions
 
-### 課題 1: Corda ネットワークの起動
+### Challenge 1: Corda Network Startup
 
-**問題**: Corda プラグインの依存関係
-**解決策**:
+**Problem**: Corda plugin dependencies
+**Solutions**:
 
--   Corda 開発環境の完全なセットアップ
--   または、モックデータでのデモ
+-   Complete Corda development environment setup
+-   Or, demo with mock data
 
-### 課題 2: Solana コンポーネントのビルド
+### Challenge 2: Solana Component Build
 
-**問題**: Anchor CLI のバージョン不一致
-**解決策**:
+**Problem**: Anchor CLI version mismatch
+**Solutions**:
 
--   Anchor CLI の正しいバージョンインストール
--   または、既存の IDL ファイルを使用
+-   Install correct Anchor CLI version
+-   Or, use existing IDL files
 
-### 課題 3: 統合レイヤーのビルド
+### Challenge 3: Integration Layer Build
 
-**問題**: TypeScript コンパイルエラー
-**解決策**:
+**Problem**: TypeScript compilation errors
+**Solutions**:
 
--   依存関係の修正
--   型定義の統一
--   または、フロントエンド単体でのデモ
+-   Fix dependencies
+-   Unify type definitions
+-   Or, frontend-only demo
 
-## 次のステップ
+## Next Steps
 
-### 即座に実行可能
+### Immediately Executable
 
-1. **フロントエンドデモの実行**
+1. **Frontend Demo Execution**
 
-    - ブラウザで UI を操作
-    - サンプルデータの表示
-    - ユーザーフローの説明
+    - Operate UI in browser
+    - Display sample data
+    - Explain user flows
 
-2. **アーキテクチャの説明**
-    - システム設計図の提示
-    - 技術的優位性の説明
-    - 実装の詳細
+2. **Architecture Explanation**
+    - Present system design diagrams
+    - Explain technical advantages
+    - Detail implementation
 
-### 短期間で改善可能
+### Short-term Improvements
 
-1. **統合レイヤーの修正**
+1. **Integration Layer Fixes**
 
-    - TypeScript エラーの修正
-    - 依存関係の解決
-    - 基本的な API エンドポイントの実装
+    - Fix TypeScript errors
+    - Resolve dependencies
+    - Implement basic API endpoints
 
-2. **Solana コンポーネントの修正**
-    - Anchor CLI のバージョン統一
-    - プログラムのデプロイ
-    - 実際のトランザクション実行
+2. **Solana Component Fixes**
+    - Unify Anchor CLI versions
+    - Deploy programs
+    - Execute actual transactions
 
-### 中長期的な改善
+### Medium to Long-term Improvements
 
-1. **Corda ネットワークの構築**
+1. **Corda Network Construction**
 
-    - 開発環境の完全なセットアップ
-    - ノードの起動と設定
-    - 実際のアイデンティティ認証
+    - Complete development environment setup
+    - Node startup and configuration
+    - Actual identity authentication
 
-2. **エンドツーエンドテスト**
-    - 全コンポーネントの統合
-    - 実際のデータフローの確認
-    - パフォーマンステスト
+2. **End-to-End Testing**
+    - Integrate all components
+    - Verify actual data flows
+    - Performance testing
 
-## 結論
+## Conclusion
 
-### 現在の状況
+### Current Status
 
--   ✅ **フロントエンド**: 完全に動作
--   ✅ **Solana ネットワーク**: 正常に動作
--   ⚠️ **Corda ネットワーク**: 設定問題
--   ⚠️ **統合レイヤー**: ビルドエラー
--   ✅ **デモデータ**: 準備完了
+-   ✅ **Frontend**: Fully functional
+-   ✅ **Solana Network**: Running normally
+-   ⚠️ **Corda Network**: Configuration issues
+-   ⚠️ **Integration Layer**: Build errors
+-   ✅ **Demo Data**: Ready
 
-### ハッカソン入賞の可能性
+### Hackathon Winning Potential
 
-**🎯 非常に高い**
+**🎯 Very High**
 
-理由:
+Reasons:
 
-1. **技術的革新性**: ハイブリッドブロックチェーンアーキテクチャ
-2. **実装完成度**: フロントエンドとコア機能が実装済み
-3. **デモ可能性**: フロントエンドでの完全なデモが可能
-4. **社会的意義**: データ所有権とプライバシー保護
+1. **Technical Innovation**: Hybrid blockchain architecture
+2. **Implementation Completeness**: Frontend and core features implemented
+3. **Demo Capability**: Complete frontend demo possible
+4. **Social Significance**: Data ownership and privacy protection
 
-### 推奨アクション
+### Recommended Actions
 
-1. **即座に実行**: フロントエンドデモの準備
-2. **短期間**: 統合レイヤーの修正
-3. **中長期**: Corda ネットワークの構築
+1. **Immediate**: Prepare frontend demo
+2. **Short-term**: Fix integration layer
+3. **Medium to long-term**: Build Corda network
 
 ---
 
-**レポート作成者**: DataSov デモ環境構築チーム
-**最終更新**: 2025 年 10 月 23 日
+**Report Author**: DataSov Demo Environment Setup Team
+**Last Updated**: October 23, 2025

@@ -109,20 +109,31 @@ export const useAuth = () => {
 
     // Logout function
     const logout = useCallback(async () => {
+        console.log("Logout initiated");
         try {
             await apiService.logout();
         } catch (error) {
             // Ignore logout errors
         }
 
+        console.log("Setting auth state to logged out");
+        // Clear auth state immediately
         setAuthState({
             isAuthenticated: false,
             user: null,
             token: null,
             loading: false,
         });
+
+        // Clear all cached data
         queryClient.clear();
+
+        // Show success message
         toast.success("Logged out successfully");
+        console.log("Logout completed");
+
+        // Force a page reload to ensure clean state
+        window.location.href = "/login";
     }, [queryClient]);
 
     // Update user profile
