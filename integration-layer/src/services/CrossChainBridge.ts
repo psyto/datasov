@@ -32,6 +32,8 @@ export class CrossChainBridge extends EventEmitter {
     private config: BridgeConfig;
     private logger: Logger;
     private isRunning: boolean = false;
+    private syncRunning: boolean = false;
+    private lastSyncTime?: number;
     private syncInterval?: NodeJS.Timeout;
     private eventHandlers: Map<string, Function> = new Map();
 
@@ -79,7 +81,7 @@ export class CrossChainBridge extends EventEmitter {
         } catch (error) {
             this.logger.error("Failed to start cross-chain bridge", error);
             throw new BridgeError("Failed to start bridge", {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -200,14 +202,20 @@ export class CrossChainBridge extends EventEmitter {
             this.emit("bridgeEvent", {
                 type: "PROOF_INVALID",
                 timestamp: Date.now(),
-                details: { identityId: proof.identityId, error: error.message },
+                details: {
+                    identityId: proof.identityId,
+                    error:
+                        error instanceof Error ? error.message : String(error),
+                },
             } as BridgeEvent);
 
             return {
                 isValid: false,
                 identityId: proof.identityId,
                 verificationLevel: proof.verificationLevel,
-                errors: [error.message],
+                errors: [
+                    error instanceof Error ? error.message : String(error),
+                ],
             };
         }
     }
@@ -219,9 +227,8 @@ export class CrossChainBridge extends EventEmitter {
         try {
             this.logger.info(`Generating identity proof for ${identityId}`);
 
-            const proof = await this.cordaService.generateIdentityProof(
-                identityId
-            );
+            const proof =
+                await this.cordaService.generateIdentityProof(identityId);
 
             this.logger.info(`Identity proof generated for ${identityId}`);
             return proof;
@@ -232,7 +239,7 @@ export class CrossChainBridge extends EventEmitter {
             );
             throw new BridgeError("Failed to generate identity proof", {
                 identityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -269,7 +276,7 @@ export class CrossChainBridge extends EventEmitter {
                 identityId,
                 consumer,
                 dataType,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -292,9 +299,8 @@ export class CrossChainBridge extends EventEmitter {
             );
 
             // Validate identity proof
-            const identityProof = await this.generateIdentityProof(
-                cordaIdentityId
-            );
+            const identityProof =
+                await this.generateIdentityProof(cordaIdentityId);
             const validation = await this.validateIdentityProof(identityProof);
 
             if (!validation.isValid) {
@@ -325,7 +331,7 @@ export class CrossChainBridge extends EventEmitter {
             throw new BridgeError("Failed to create data listing", {
                 cordaIdentityId,
                 listingId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -377,7 +383,7 @@ export class CrossChainBridge extends EventEmitter {
             throw new BridgeError("Failed to purchase data", {
                 listingId,
                 cordaIdentityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -408,9 +414,8 @@ export class CrossChainBridge extends EventEmitter {
                         );
 
                         // Validate proof
-                        const validation = await this.validateIdentityProof(
-                            proof
-                        );
+                        const validation =
+                            await this.validateIdentityProof(proof);
                         if (validation.isValid) {
                             syncedCount++;
                         } else {
@@ -425,7 +430,7 @@ export class CrossChainBridge extends EventEmitter {
                 } catch (error) {
                     failedCount++;
                     errors.push(
-                        `Error syncing identity ${identity.identityId}: ${error.message}`
+                        `Error syncing identity ${identity.identityId}: ${error instanceof Error ? error.message : String(error)}`
                     );
                 }
             }
@@ -457,14 +462,19 @@ export class CrossChainBridge extends EventEmitter {
             this.emit("bridgeEvent", {
                 type: "SYNC_FAILED",
                 timestamp: Date.now(),
-                details: { error: error.message },
+                details: {
+                    error:
+                        error instanceof Error ? error.message : String(error),
+                },
             } as BridgeEvent);
 
             return {
                 success: false,
                 syncedCount: 0,
                 failedCount: 1,
-                errors: [error.message],
+                errors: [
+                    error instanceof Error ? error.message : String(error),
+                ],
                 duration: 0,
             };
         }
@@ -490,9 +500,34 @@ export class CrossChainBridge extends EventEmitter {
         } catch (error) {
             this.logger.error("Failed to get state snapshot", error);
             throw new BridgeError("Failed to get state snapshot", {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
+    }
+
+    /**
+     * Stop synchronization
+     */
+    async stopSync(): Promise<void> {
+        try {
+            this.syncRunning = false;
+            this.logger.info("Synchronization stopped");
+        } catch (error) {
+            this.logger.error("Failed to stop synchronization", error);
+            throw new BridgeError("Failed to stop synchronization", {
+                error: error instanceof Error ? error.message : String(error),
+            });
+        }
+    }
+
+    /**
+     * Get synchronization status
+     */
+    getSyncStatus(): { isRunning: boolean; lastSync?: number } {
+        return {
+            isRunning: this.syncRunning,
+            lastSync: this.lastSyncTime,
+        };
     }
 
     /**

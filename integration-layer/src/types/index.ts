@@ -277,8 +277,8 @@ export interface HealthCheckResponse {
     };
     metrics: {
         uptime: number;
-        memoryUsage: number;
-        cpuUsage: number;
+        memoryUsage: NodeJS.MemoryUsage;
+        cpuUsage: NodeJS.CpuUsage;
         activeConnections: number;
     };
 }
@@ -314,7 +314,8 @@ export interface SolanaEvent {
         | "DATA_PURCHASED"
         | "DATA_LISTING_UPDATED"
         | "DATA_LISTING_CANCELLED"
-        | "FEE_DISTRIBUTED";
+        | "FEE_DISTRIBUTED"
+        | "HEALTH_CHECK";
     identityId: string;
     timestamp: number;
     transactionHash: string;

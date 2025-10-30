@@ -48,7 +48,7 @@ class SolanaService extends events_1.EventEmitter {
         catch (error) {
             this.logger.error("Failed to connect to Solana network", error);
             throw new types_1.SolanaError("Connection failed", {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -94,7 +94,7 @@ class SolanaService extends events_1.EventEmitter {
             throw new types_1.SolanaError("Failed to create data listing", {
                 listingId,
                 cordaIdentityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -135,7 +135,7 @@ class SolanaService extends events_1.EventEmitter {
             throw new types_1.SolanaError("Failed to purchase data", {
                 listingId,
                 cordaIdentityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -166,7 +166,7 @@ class SolanaService extends events_1.EventEmitter {
             throw new types_1.SolanaError("Failed to update data listing", {
                 listingId,
                 cordaIdentityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -196,7 +196,7 @@ class SolanaService extends events_1.EventEmitter {
             throw new types_1.SolanaError("Failed to cancel data listing", {
                 listingId,
                 cordaIdentityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -229,7 +229,7 @@ class SolanaService extends events_1.EventEmitter {
             this.logger.error(`Failed to get data listing ${listingId}`, error);
             throw new types_1.SolanaError("Failed to get data listing", {
                 listingId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -258,7 +258,7 @@ class SolanaService extends events_1.EventEmitter {
         catch (error) {
             this.logger.error("Failed to get active data listings", error);
             throw new types_1.SolanaError("Failed to get active data listings", {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -288,7 +288,7 @@ class SolanaService extends events_1.EventEmitter {
             this.logger.error(`Failed to get data listings for owner ${owner}`, error);
             throw new types_1.SolanaError("Failed to get data listings by owner", {
                 owner,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -328,7 +328,7 @@ class SolanaService extends events_1.EventEmitter {
             this.logger.error(`Failed to validate identity proof`, error);
             return {
                 isValid: false,
-                errors: [error.message],
+                errors: [error instanceof Error ? error.message : String(error)],
                 warnings: [],
             };
         }
@@ -382,7 +382,7 @@ class SolanaService extends events_1.EventEmitter {
             this.logger.error("Failed to get Solana metrics", error);
             return {
                 isConnected: this.isConnected,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             };
         }
     }

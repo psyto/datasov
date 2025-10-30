@@ -12,6 +12,18 @@ import compression from "compression";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
+// Extend Express Request interface
+declare global {
+    namespace Express {
+        interface Request {
+            user?: {
+                userId: string;
+                email: string;
+            };
+        }
+    }
+}
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || "datasov-demo-secret-key";
@@ -316,7 +328,7 @@ app.post("/auth/register", async (req, res) => {
 });
 
 app.get("/auth/me", authenticateToken, (req, res) => {
-    const user = users.find((u) => u.id === req.user.userId);
+    const user = users.find((u) => u.id === req.user?.userId);
     if (!user) {
         return res.status(404).json({
             success: false,

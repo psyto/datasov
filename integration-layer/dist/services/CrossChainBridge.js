@@ -14,6 +14,7 @@ class CrossChainBridge extends events_1.EventEmitter {
     constructor(cordaService, solanaService, config) {
         super();
         this.isRunning = false;
+        this.syncRunning = false;
         this.eventHandlers = new Map();
         this.cordaService = cordaService;
         this.solanaService = solanaService;
@@ -47,7 +48,7 @@ class CrossChainBridge extends events_1.EventEmitter {
         catch (error) {
             this.logger.error("Failed to start cross-chain bridge", error);
             throw new types_1.BridgeError("Failed to start bridge", {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -144,13 +145,13 @@ class CrossChainBridge extends events_1.EventEmitter {
             this.emit("bridgeEvent", {
                 type: "PROOF_INVALID",
                 timestamp: Date.now(),
-                details: { identityId: proof.identityId, error: error.message },
+                details: { identityId: proof.identityId, error: error instanceof Error ? error.message : String(error) },
             });
             return {
                 isValid: false,
                 identityId: proof.identityId,
                 verificationLevel: proof.verificationLevel,
-                errors: [error.message],
+                errors: [error instanceof Error ? error.message : String(error)],
             };
         }
     }
@@ -168,7 +169,7 @@ class CrossChainBridge extends events_1.EventEmitter {
             this.logger.error(`Failed to generate identity proof for ${identityId}`, error);
             throw new types_1.BridgeError("Failed to generate identity proof", {
                 identityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -188,7 +189,7 @@ class CrossChainBridge extends events_1.EventEmitter {
                 identityId,
                 consumer,
                 dataType,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -217,7 +218,7 @@ class CrossChainBridge extends events_1.EventEmitter {
             throw new types_1.BridgeError("Failed to create data listing", {
                 cordaIdentityId,
                 listingId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -244,7 +245,7 @@ class CrossChainBridge extends events_1.EventEmitter {
             throw new types_1.BridgeError("Failed to purchase data", {
                 listingId,
                 cordaIdentityId,
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -279,7 +280,7 @@ class CrossChainBridge extends events_1.EventEmitter {
                 }
                 catch (error) {
                     failedCount++;
-                    errors.push(`Error syncing identity ${identity.identityId}: ${error.message}`);
+                    errors.push(`Error syncing identity ${identity.identityId}: ${error instanceof Error ? error.message : String(error)}`);
                 }
             }
             const duration = Date.now() - startTime;
@@ -306,13 +307,13 @@ class CrossChainBridge extends events_1.EventEmitter {
             this.emit("bridgeEvent", {
                 type: "SYNC_FAILED",
                 timestamp: Date.now(),
-                details: { error: error.message },
+                details: { error: error instanceof Error ? error.message : String(error) },
             });
             return {
                 success: false,
                 syncedCount: 0,
                 failedCount: 1,
-                errors: [error.message],
+                errors: [error instanceof Error ? error.message : String(error)],
                 duration: 0,
             };
         }
@@ -335,9 +336,33 @@ class CrossChainBridge extends events_1.EventEmitter {
         catch (error) {
             this.logger.error("Failed to get state snapshot", error);
             throw new types_1.BridgeError("Failed to get state snapshot", {
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
             });
         }
+    }
+    /**
+     * Stop synchronization
+     */
+    async stopSync() {
+        try {
+            this.syncRunning = false;
+            this.logger.info("Synchronization stopped");
+        }
+        catch (error) {
+            this.logger.error("Failed to stop synchronization", error);
+            throw new types_1.BridgeError("Failed to stop synchronization", {
+                error: error instanceof Error ? error.message : String(error),
+            });
+        }
+    }
+    /**
+     * Get synchronization status
+     */
+    getSyncStatus() {
+        return {
+            isRunning: this.syncRunning,
+            lastSync: this.lastSyncTime,
+        };
     }
     /**
      * Setup event handlers for cross-chain communication

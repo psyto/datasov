@@ -65,6 +65,10 @@ export declare class CordaService extends EventEmitter {
      */
     isHealthy(): boolean;
     /**
+     * Validate access proof
+     */
+    validateAccessProof(proof: AccessProof): Promise<ValidationResult>;
+    /**
      * Get service metrics
      */
     getMetrics(): Record<string, any>;

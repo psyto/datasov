@@ -234,8 +234,8 @@ export interface HealthCheckResponse {
     };
     metrics: {
         uptime: number;
-        memoryUsage: number;
-        cpuUsage: number;
+        memoryUsage: NodeJS.MemoryUsage;
+        cpuUsage: NodeJS.CpuUsage;
         activeConnections: number;
     };
 }
@@ -253,7 +253,7 @@ export interface CordaEvent {
     details: Record<string, any>;
 }
 export interface SolanaEvent {
-    type: "DATA_LISTING_CREATED" | "DATA_PURCHASED" | "DATA_LISTING_UPDATED" | "DATA_LISTING_CANCELLED" | "FEE_DISTRIBUTED";
+    type: "DATA_LISTING_CREATED" | "DATA_PURCHASED" | "DATA_LISTING_UPDATED" | "DATA_LISTING_CANCELLED" | "FEE_DISTRIBUTED" | "HEALTH_CHECK";
     identityId: string;
     timestamp: number;
     transactionHash: string;

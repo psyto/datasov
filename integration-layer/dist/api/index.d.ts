@@ -90,6 +90,18 @@ export declare class ApiGateway {
      */
     private notFoundHandler;
     /**
+     * Validate access proof
+     */
+    private validateAccessProof;
+    /**
+     * Stop synchronization
+     */
+    private stopSync;
+    /**
+     * Get synchronization status
+     */
+    private getSyncStatus;
+    /**
      * Create standardized API response
      */
     private createApiResponse;

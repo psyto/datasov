@@ -187,7 +187,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Health check failed",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -209,7 +209,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to get bridge status",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -240,7 +240,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to get identity",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -266,7 +266,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to generate identity proof",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -289,7 +289,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to validate identity proof",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -316,7 +316,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to generate access proof",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -357,7 +357,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to create data listing",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -393,7 +393,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to get data listing",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -446,7 +446,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to get data listings",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -480,7 +480,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to update data listing",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -513,7 +513,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to cancel data listing",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -543,7 +543,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to purchase data",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -565,7 +565,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to start sync",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -587,7 +587,7 @@ export class ApiGateway {
                 this.createApiResponse(
                     null,
                     "Failed to get state snapshot",
-                    error.message
+                    error instanceof Error ? error.message : String(error)
                 )
             );
         }
@@ -621,6 +621,105 @@ export class ApiGateway {
         res.status(404).json(
             this.createApiResponse(null, "Endpoint not found")
         );
+    }
+
+    /**
+     * Validate access proof
+     */
+    private async validateAccessProof(
+        req: express.Request,
+        res: express.Response
+    ): Promise<void> {
+        try {
+            const { proof } = req.body;
+
+            if (!proof) {
+                res.status(400).json(
+                    this.createApiResponse(null, "Access proof is required")
+                );
+                return;
+            }
+
+            const isValid = await this.cordaService.validateAccessProof(proof);
+
+            res.json(
+                this.createApiResponse(
+                    { isValid },
+                    "Access proof validation completed"
+                )
+            );
+        } catch (error) {
+            this.logger.error("Validate access proof error", {
+                error: error instanceof Error ? error.message : String(error),
+            });
+            res.status(500).json(
+                this.createApiResponse(
+                    null,
+                    "Failed to validate access proof",
+                    error instanceof Error ? error.message : String(error)
+                )
+            );
+        }
+    }
+
+    /**
+     * Stop synchronization
+     */
+    private async stopSync(
+        req: express.Request,
+        res: express.Response
+    ): Promise<void> {
+        try {
+            await this.bridge.stopSync();
+
+            res.json(
+                this.createApiResponse(
+                    { stopped: true },
+                    "Synchronization stopped"
+                )
+            );
+        } catch (error) {
+            this.logger.error("Stop sync error", {
+                error: error instanceof Error ? error.message : String(error),
+            });
+            res.status(500).json(
+                this.createApiResponse(
+                    null,
+                    "Failed to stop synchronization",
+                    error instanceof Error ? error.message : String(error)
+                )
+            );
+        }
+    }
+
+    /**
+     * Get synchronization status
+     */
+    private async getSyncStatus(
+        req: express.Request,
+        res: express.Response
+    ): Promise<void> {
+        try {
+            const status = this.bridge.getSyncStatus();
+
+            res.json(
+                this.createApiResponse(
+                    status,
+                    "Synchronization status retrieved"
+                )
+            );
+        } catch (error) {
+            this.logger.error("Get sync status error", {
+                error: error instanceof Error ? error.message : String(error),
+            });
+            res.status(500).json(
+                this.createApiResponse(
+                    null,
+                    "Failed to get synchronization status",
+                    error instanceof Error ? error.message : String(error)
+                )
+            );
+        }
     }
 
     /**

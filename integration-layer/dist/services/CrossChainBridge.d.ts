@@ -15,6 +15,8 @@ export declare class CrossChainBridge extends EventEmitter {
     private config;
     private logger;
     private isRunning;
+    private syncRunning;
+    private lastSyncTime?;
     private syncInterval?;
     private eventHandlers;
     constructor(cordaService: CordaService, solanaService: SolanaService, config: BridgeConfig);
@@ -54,6 +56,17 @@ export declare class CrossChainBridge extends EventEmitter {
      * Get current state snapshot
      */
     getStateSnapshot(): Promise<StateSnapshot>;
+    /**
+     * Stop synchronization
+     */
+    stopSync(): Promise<void>;
+    /**
+     * Get synchronization status
+     */
+    getSyncStatus(): {
+        isRunning: boolean;
+        lastSync?: number;
+    };
     /**
      * Setup event handlers for cross-chain communication
      */

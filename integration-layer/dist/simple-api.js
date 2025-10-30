@@ -275,7 +275,7 @@ app.post("/auth/register", async (req, res) => {
     }
 });
 app.get("/auth/me", authenticateToken, (req, res) => {
-    const user = users.find((u) => u.id === req.user.userId);
+    const user = users.find((u) => u.id === req.user?.userId);
     if (!user) {
         return res.status(404).json({
             success: false,

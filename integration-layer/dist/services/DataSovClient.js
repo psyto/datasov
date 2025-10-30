@@ -7,7 +7,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataSovClient = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const web3_js_2 = require("@solana/web3.js");
+const anchor_1 = require("@coral-xyz/anchor");
 class DataSovClient {
     constructor(config) {
         this.connection = new web3_js_1.Connection(config.rpcUrl, "confirmed");
@@ -38,7 +38,7 @@ class DataSovClient {
         return {
             id: listingId,
             owner: "mock_owner",
-            price: new web3_js_2.BN(1000000), // 0.001 SOL
+            price: new anchor_1.BN(1000000), // 0.001 SOL
             dataType: "LOCATION_HISTORY",
             description: "Mock data listing",
             isActive: true,
@@ -58,7 +58,7 @@ class DataSovClient {
             {
                 id: 1,
                 owner: "mock_owner_1",
-                price: new web3_js_2.BN(1000000),
+                price: new anchor_1.BN(1000000),
                 dataType: "LOCATION_HISTORY",
                 description: "Mock location data",
                 isActive: true,

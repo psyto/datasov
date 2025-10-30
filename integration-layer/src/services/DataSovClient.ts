@@ -11,7 +11,8 @@ import {
     Transaction,
     SystemProgram,
 } from "@solana/web3.js";
-import { Program, AnchorProvider, Wallet, BN } from "@solana/web3.js";
+import { Program, AnchorProvider, Wallet } from "@coral-xyz/anchor";
+import { BN } from "@coral-xyz/anchor";
 
 export interface DataSovConfig {
     rpcUrl: string;
@@ -126,7 +127,3 @@ export class DataSovClient {
         return `mock_cancel_tx_${Date.now()}`;
     }
 }
-
-
-
-
