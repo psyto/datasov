@@ -364,6 +364,42 @@ For questions and support:
 
 **DataSov Integration Layer** - Seamlessly connecting Corda and Solana for the future of data ownership.
 
+---
 
+## ⚡ Quick Start (Demo Simple API)
 
+For local demo and integration tests, run the lightweight Simple API instead of the full API:
 
+```bash
+cd integration-layer
+npm install
+npm run build
+node dist/simple-api.js
+```
+
+This starts an Express server on http://localhost:3001 and prints demo credentials:
+
+- Email: demo@datasov.com
+- Password: password123
+
+Pair this with the frontend:
+
+```bash
+cd ../frontend
+npm install
+npm start
+```
+
+Then run the integration smoke tests from the repo root:
+
+```bash
+node ../integration-test.js
+```
+
+### About TS Path Aliases
+
+The full API (`dist/index.js`) uses TS path aliases like `@/utils/Logger`. If you see runtime errors like `Cannot find module '@/utils/Logger'`, either:
+
+- use the Simple API (`dist/simple-api.js`) for demos, or
+- add runtime alias resolution (e.g., `tsconfig-paths` / `module-alias`), or
+- adjust build configuration to emit relative imports.

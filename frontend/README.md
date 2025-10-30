@@ -54,6 +54,8 @@ A modern React frontend application for the DataSov hybrid blockchain platform t
 
 The application will be available at `http://localhost:3000`.
 
+> Note: This app expects an API at `http://localhost:3001` (see `package.json` `proxy`). Start the Integration Layer (Simple API for demos) before logging in.
+
 ## 🔧 Configuration
 
 ### Environment Variables
@@ -80,6 +82,20 @@ REACT_APP_DEBUG=true
 The frontend integrates with the DataSov Integration Layer API:
 
 -   **Base URL**: Configured via `REACT_APP_API_URL`
+For local demos:
+
+```bash
+# Terminal A
+cd ../integration-layer && npm run build && node dist/simple-api.js
+
+# Terminal B
+cd frontend && npm start
+```
+
+Demo credentials:
+
+- Email: `demo@datasov.com`
+- Password: `password123`
 -   **Authentication**: JWT token-based authentication
 -   **Endpoints**: RESTful API for all operations
 -   **Real-time**: WebSocket connections for live updates

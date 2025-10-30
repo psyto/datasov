@@ -24,6 +24,30 @@ October 23, 2025
 -   **URL**: http://localhost:3000
 -   **Description**: React development server is running successfully
 
+### ✅ Minimal Demo Stack (Current)
+
+- Integration Layer (Simple API): running at http://localhost:3001
+- Frontend (CRA): running at http://localhost:3000
+- Integration Tests: 12/12 passed
+
+Commands used:
+
+```bash
+# Terminal A (API)
+cd integration-layer && npm run build && node dist/simple-api.js
+
+# Terminal B (Frontend)
+cd frontend && npm start
+
+# Terminal C (optional tests)
+cd .. && node integration-test.js
+```
+
+Demo credentials:
+
+- Email: demo@datasov.com
+- Password: password123
+
 ### ⚠️ Components with Partial Issues
 
 #### 3. Corda Network
@@ -44,14 +68,11 @@ October 23, 2025
     -   Actual version: 0.31.1
     -   Rust compiler version issues
 
-#### 5. Integration Layer
+#### 5. Integration Layer (Full API)
 
--   **Status**: ⚠️ Build Errors
--   **Issue**: TypeScript compilation errors
--   **Details**:
-    -   `corda-rpc` package not found
-    -   Type definition inconsistencies
-    -   Dependency issues
+-   **Status**: ⚠️ Uses TS path aliases
+-   **Issue**: Runtime cannot resolve `@/...` imports in `dist/index.js` in vanilla Node
+-   **Workaround**: Use `dist/simple-api.js` for demos, or add runtime alias resolution (e.g., tsconfig-paths)
 
 ## Demo Environment Access Methods
 
@@ -139,8 +160,8 @@ solana balance
     - Access control (can be simulated in frontend)
 
 2. **Cross-chain Integration**
-    - Actual Corda-Solana integration (limited due to integration layer issues)
-    - Real-time synchronization (can be substituted with mock data)
+    - Demo uses mocked proofs and sync via Simple API
+    - Full sync requires live Corda/Solana environments
 
 ## Demo Strategy for Hackathon
 
@@ -228,11 +249,10 @@ solana balance
 
 ### Short-term Improvements
 
-1. **Integration Layer Fixes**
+1. **Integration Layer (Full API)**
 
-    - Fix TypeScript errors
-    - Resolve dependencies
-    - Implement basic API endpoints
+    - Configure runtime alias resolution or remove path aliases for `dist/index.js`
+    - Connect to live Corda/Solana backends
 
 2. **Solana Component Fixes**
     - Unify Anchor CLI versions
