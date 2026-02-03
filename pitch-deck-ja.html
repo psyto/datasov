@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataSov - ピッチデッキ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* DataSov Primary - Blue */
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-300: #93c5fd;
+            --primary-400: #60a5fa;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --primary-900: #1e3a8a;
+
+            /* DataSov Secondary - Sky */
+            --secondary-50: #f0f9ff;
+            --secondary-100: #e0f2fe;
+            --secondary-200: #bae6fd;
+            --secondary-300: #7dd3fc;
+            --secondary-400: #38bdf8;
+            --secondary-500: #0ea5e9;
+            --secondary-600: #0284c7;
+            --secondary-700: #0369a1;
+            --secondary-800: #075985;
+            --secondary-900: #0c4a6e;
+
+            /* Success - Green */
+            --success-500: #22c55e;
+            --success-600: #16a34a;
+
+            /* Error - Red */
+            --error-400: #f87171;
+            --error-500: #ef4444;
+
+            /* Gradient */
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-text: linear-gradient(90deg, var(--primary-600), var(--secondary-600));
+
+            /* Neutrals */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        /* Horizontal Slide Container */
+        .slides-container {
+            display: flex;
+            height: 100vh;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .slides-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 100px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .content {
+            max-width: 1200px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--gray-300);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-dot:hover {
+            background: var(--primary-400);
+        }
+
+        .nav-dot.active {
+            background: var(--primary-600);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 40px;
+            right: 60px;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            font-weight: 500;
+            z-index: 100;
+        }
+
+        /* Arrow Navigation */
+        .nav-arrows {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+
+        .nav-arrows.left { left: 30px; }
+        .nav-arrows.right { right: 30px; }
+
+        .arrow-btn {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--gray-700);
+            transition: all 0.3s;
+        }
+
+        .arrow-btn:hover {
+            background: var(--primary-600);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .arrow-btn:disabled:hover {
+            background: white;
+            color: var(--gray-700);
+            transform: none;
+        }
+
+        /* Slide 1: Title */
+        .slide-title {
+            background: var(--gradient-bg);
+            color: white;
+        }
+
+        .slide-title .content {
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -3px;
+            margin-bottom: 24px;
+        }
+
+        .tagline {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Slide 2: Problem */
+        .slide-problem {
+            background: white;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .section-title span {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .problem-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 36px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary-200);
+        }
+
+        .problem-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .problem-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--error-500);
+        }
+
+        .problem-card p {
+            color: var(--gray-700);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .stat-highlight {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--error-500);
+            display: block;
+            margin-top: 20px;
+        }
+
+        .stat-label {
+            color: var(--gray-700);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* Slide 3: Solution */
+        .slide-solution {
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%);
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .solution-text h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .solution-text h2 span {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .solution-text p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--gray-700);
+            margin-bottom: 30px;
+        }
+
+        .solution-features {
+            list-style: none;
+        }
+
+        .solution-features li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+            color: var(--gray-800);
+        }
+
+        .check-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--success-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .solution-visual {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .arch-layer {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .arch-layer.corda {
+            background: linear-gradient(90deg, var(--primary-100), var(--primary-200));
+            border: 2px solid var(--primary-400);
+        }
+
+        .arch-layer.bridge {
+            background: var(--gradient-bg);
+            color: white;
+        }
+
+        .arch-layer.solana {
+            background: linear-gradient(90deg, var(--secondary-100), var(--secondary-200));
+            border: 2px solid var(--secondary-400);
+        }
+
+        .arch-label {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .arch-desc {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--primary-500);
+            margin: 8px 0;
+        }
+
+        /* Slide 4: Features */
+        .slide-features {
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-300);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--gradient-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .feature-card > p {
+            color: var(--gray-700);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .feature-list {
+            margin-top: 14px;
+            padding-left: 18px;
+        }
+
+        .feature-list li {
+            color: var(--gray-700);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* Slide 5: Technology */
+        .slide-tech {
+            background: var(--gray-900);
+            color: white;
+        }
+
+        .slide-tech .section-title {
+            color: white;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .tech-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .tech-box.corda {
+            border-color: var(--primary-500);
+        }
+
+        .tech-box.solana {
+            border-color: var(--secondary-500);
+        }
+
+        .tech-box h3 {
+            font-size: 1.75rem;
+            margin-bottom: 8px;
+        }
+
+        .tech-box.corda h3 { color: var(--primary-400); }
+        .tech-box.solana h3 { color: var(--secondary-400); }
+
+        .tech-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 28px;
+            font-size: 0.95rem;
+        }
+
+        .tech-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .tech-stat {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .tech-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .tech-stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .tech-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .connector-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+        }
+
+        .connector-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+
+        /* Slide 6: Business Model */
+        .slide-business {
+            background: white;
+        }
+
+        .business-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .business-actor {
+            text-align: center;
+            flex: 1;
+        }
+
+        .actor-icon {
+            width: 90px;
+            height: 90px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 16px;
+        }
+
+        .actor-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .actor-desc {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+        }
+
+        .flow-arrow {
+            font-size: 2.5rem;
+            color: var(--primary-500);
+            padding: 0 20px;
+        }
+
+        .revenue-model {
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .revenue-model h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .revenue-split {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+        }
+
+        .revenue-item {
+            text-align: center;
+        }
+
+        .revenue-percentage {
+            font-size: 3.5rem;
+            font-weight: 900;
+        }
+
+        .revenue-percentage.user {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .revenue-percentage.platform {
+            color: var(--secondary-600);
+        }
+
+        .revenue-label {
+            font-size: 1rem;
+            color: var(--gray-700);
+            margin-top: 8px;
+        }
+
+        /* Slide 7: Market */
+        .slide-market {
+            background: linear-gradient(135deg, var(--primary-50) 0%, white 100%);
+        }
+
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .market-stat {
+            text-align: center;
+            padding: 36px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .market-stat-value {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .market-stat-label {
+            font-size: 1rem;
+            color: var(--gray-800);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .market-stat-desc {
+            font-size: 0.85rem;
+            color: var(--gray-700);
+            margin-top: 4px;
+        }
+
+        .target-segments {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .segment {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            border-left: 4px solid var(--primary-500);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .segment h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: var(--primary-700);
+        }
+
+        .segment ul {
+            list-style: none;
+        }
+
+        .segment li {
+            color: var(--gray-700);
+            margin-bottom: 8px;
+            padding-left: 18px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .segment li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: var(--secondary-500);
+            border-radius: 50%;
+        }
+
+        /* Slide 8: Competitive Advantage */
+        .slide-advantage {
+            background: white;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px 28px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .comparison-table th {
+            background: var(--primary-600);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 500;
+            color: var(--gray-800);
+            background: var(--gray-50);
+        }
+
+        .comparison-table .datasov-col {
+            color: var(--primary-700);
+            font-weight: 600;
+            background: var(--primary-50);
+        }
+
+        .comparison-table .traditional-col {
+            color: var(--gray-700);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Slide 9: Roadmap */
+        .slide-roadmap {
+            background: var(--gray-900);
+            color: white;
+        }
+
+        .slide-roadmap .section-title {
+            color: white;
+        }
+
+        .roadmap {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 50px 0;
+        }
+
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            top: 75px;
+            left: 50px;
+            right: 50px;
+            height: 4px;
+            background: var(--gradient-bg);
+            border-radius: 2px;
+        }
+
+        .roadmap-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 0 15px;
+        }
+
+        .roadmap-dot {
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-bg);
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .roadmap-item.completed .roadmap-dot {
+            background: var(--success-500);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+        }
+
+        .roadmap-phase {
+            font-size: 0.85rem;
+            color: var(--primary-400);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .roadmap-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .roadmap-items {
+            list-style: none;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .roadmap-items li {
+            margin-bottom: 6px;
+        }
+
+        /* Slide 10: CTA */
+        .slide-cta {
+            background: var(--gradient-bg);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-logo {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+        }
+
+        .cta-tagline {
+            font-size: 1.75rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .cta-btn {
+            padding: 18px 44px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .cta-btn.primary {
+            background: white;
+            color: var(--primary-700);
+        }
+
+        .cta-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-btn.secondary {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+        }
+
+        .cta-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .contact-info {
+            opacity: 0.9;
+        }
+
+        .contact-info p {
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px 50px;
+            }
+
+            .problem-grid,
+            .features-grid,
+            .market-stats,
+            .target-segments {
+                grid-template-columns: 1fr;
+            }
+
+            .solution-grid,
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .business-flow {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .roadmap {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .roadmap::before {
+                display: none;
+            }
+
+            .nav-arrows {
+                display: none;
+            }
+        }
+
+        /* Print */
+        @media print {
+            .slides-container {
+                display: block;
+                overflow: visible;
+            }
+
+            .slide {
+                page-break-after: always;
+                min-width: auto;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .nav-bar,
+            .nav-arrows,
+            .slide-counter {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows left">
+        <button class="arrow-btn" id="prevBtn" onclick="prevSlide()">&#8249;</button>
+    </div>
+    <div class="nav-arrows right">
+        <button class="arrow-btn" id="nextBtn" onclick="nextSlide()">&#8250;</button>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">10</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-dot active" onclick="goToSlide(0)"></div>
+        <div class="nav-dot" onclick="goToSlide(1)"></div>
+        <div class="nav-dot" onclick="goToSlide(2)"></div>
+        <div class="nav-dot" onclick="goToSlide(3)"></div>
+        <div class="nav-dot" onclick="goToSlide(4)"></div>
+        <div class="nav-dot" onclick="goToSlide(5)"></div>
+        <div class="nav-dot" onclick="goToSlide(6)"></div>
+        <div class="nav-dot" onclick="goToSlide(7)"></div>
+        <div class="nav-dot" onclick="goToSlide(8)"></div>
+        <div class="nav-dot" onclick="goToSlide(9)"></div>
+    </nav>
+
+    <!-- Slides Container -->
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- Slide 1: Title -->
+        <section class="slide slide-title">
+            <div class="content">
+                <h1 class="logo">DataSov</h1>
+                <p class="tagline">あなたのデータ、あなたの価値</p>
+                <p class="subtitle">
+                    ハイブリッドブロックチェーン技術で実現する<br>
+                    次世代のパーソナルデータ管理・収益化プラットフォーム
+                </p>
+            </div>
+        </section>
+
+        <!-- Slide 2: Problem -->
+        <section class="slide slide-problem">
+            <div class="content">
+                <h2 class="section-title">解決すべき<span>課題</span></h2>
+                <div class="problem-grid">
+                    <div class="problem-card">
+                        <div class="problem-icon">🔓</div>
+                        <h3>データの無断利用</h3>
+                        <p>大手IT企業があなたのデータを収集・販売し、莫大な利益を得ています。</p>
+                        <span class="stat-highlight">¥50兆+</span>
+                        <p class="stat-label">世界のデータ市場規模</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-icon">💔</div>
+                        <h3>ユーザーへの還元なし</h3>
+                        <p>あなたのデータが生み出す価値のほぼ100%が企業に渡っています。</p>
+                        <span class="stat-highlight">0%</span>
+                        <p class="stat-label">従来のユーザー還元率</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-icon">⚠️</div>
+                        <h3>プライバシーリスク</h3>
+                        <p>一度提供したデータの削除や利用停止が困難で、情報漏洩のリスクも。</p>
+                        <span class="stat-highlight">83%</span>
+                        <p class="stat-label">データ管理に不安を感じる人</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Solution -->
+        <section class="slide slide-solution">
+            <div class="content">
+                <div class="solution-grid">
+                    <div class="solution-text">
+                        <h2><span>DataSov</span>の解決策</h2>
+                        <p>
+                            DataSovは、CordaとSolanaのハイブリッドブロックチェーン技術を活用し、
+                            ユーザーが自身のデータを完全にコントロールしながら、
+                            安全に収益化できるプラットフォームを提供します。
+                        </p>
+                        <ul class="solution-features">
+                            <li>
+                                <span class="check-icon">✓</span>
+                                <span>完全なデータ所有権の実現</span>
+                            </li>
+                            <li>
+                                <span class="check-icon">✓</span>
+                                <span>匿名化されたデータのみを取引</span>
+                            </li>
+                            <li>
+                                <span class="check-icon">✓</span>
+                                <span>いつでもアクセス権を取り消し可能</span>
+                            </li>
+                            <li>
+                                <span class="check-icon">✓</span>
+                                <span>売上の97.5%をユーザーに還元</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="solution-visual">
+                        <div class="arch-layer corda">
+                            <div class="arch-label">Corda（アイデンティティ層）</div>
+                            <div class="arch-desc">本人確認・KYC・アクセス制御</div>
+                        </div>
+                        <div class="arrow-down">↕</div>
+                        <div class="arch-layer bridge">
+                            <div class="arch-label">クロスチェーンブリッジ</div>
+                            <div class="arch-desc">安全なデータ連携・同期</div>
+                        </div>
+                        <div class="arrow-down">↕</div>
+                        <div class="arch-layer solana">
+                            <div class="arch-label">Solana（マーケットプレイス層）</div>
+                            <div class="arch-desc">データNFT・取引・決済</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Features -->
+        <section class="slide slide-features">
+            <div class="content">
+                <h2 class="section-title">主要<span>機能</span></h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <div class="feature-icon">🪪</div>
+                            <h3>デジタルアイデンティティ管理</h3>
+                        </div>
+                        <p>KYC認証済みの安全なデジタルIDを作成。NTTドコモなど多様な認証ソースに対応。</p>
+                        <ul class="feature-list">
+                            <li>本人確認書類・生体認証対応</li>
+                            <li>選択的情報開示</li>
+                            <li>複数の認証レベル</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <div class="feature-icon">🔐</div>
+                            <h3>きめ細かなアクセス制御</h3>
+                        </div>
+                        <p>誰がどのデータにアクセスできるかを完全にコントロール。</p>
+                        <ul class="feature-list">
+                            <li>時間ベースの権限設定</li>
+                            <li>即座のアクセス取り消し</li>
+                            <li>完全な監査証跡</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <div class="feature-icon">💎</div>
+                            <h3>データトークン化</h3>
+                        </div>
+                        <p>匿名化されたデータをNFTとして発行し、マーケットプレイスで取引。</p>
+                        <ul class="feature-list">
+                            <li>位置情報・健康データ・購買履歴など</li>
+                            <li>柔軟な価格設定</li>
+                            <li>自動収益分配</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-header">
+                            <div class="feature-icon">🛡️</div>
+                            <h3>プライバシー保護設計</h3>
+                        </div>
+                        <p>個人情報は許可型ブロックチェーンで保護。公開されるのは匿名化データのみ。</p>
+                        <ul class="feature-list">
+                            <li>エンドツーエンド暗号化</li>
+                            <li>ゼロ知識証明対応</li>
+                            <li>GDPR準拠設計</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Technology -->
+        <section class="slide slide-tech">
+            <div class="content">
+                <h2 class="section-title">ハイブリッド<span>アーキテクチャ</span></h2>
+                <div class="tech-grid">
+                    <div class="tech-box corda">
+                        <h3>Corda</h3>
+                        <p class="tech-subtitle">エンタープライズ向けプライベートチェーン</p>
+                        <div class="tech-stats">
+                            <div class="tech-stat">
+                                <div class="tech-stat-value">1,000+ TPS</div>
+                                <div class="tech-stat-label">処理速度</div>
+                            </div>
+                            <div class="tech-stat">
+                                <div class="tech-stat-value">許可型</div>
+                                <div class="tech-stat-label">ネットワーク</div>
+                            </div>
+                            <div class="tech-stat">
+                                <div class="tech-stat-value">金融機関採用</div>
+                                <div class="tech-stat-label">信頼性</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-connector">
+                        <div class="connector-icon">⚡</div>
+                        <div class="connector-label">クロスチェーン<br>ブリッジ</div>
+                    </div>
+                    <div class="tech-box solana">
+                        <h3>Solana</h3>
+                        <p class="tech-subtitle">高性能パブリックチェーン</p>
+                        <div class="tech-stats">
+                            <div class="tech-stat">
+                                <div class="tech-stat-value">65,000+ TPS</div>
+                                <div class="tech-stat-label">処理速度</div>
+                            </div>
+                            <div class="tech-stat">
+                                <div class="tech-stat-value">&lt;$0.001</div>
+                                <div class="tech-stat-label">取引手数料</div>
+                            </div>
+                            <div class="tech-stat">
+                                <div class="tech-stat-value">NFT対応</div>
+                                <div class="tech-stat-label">データ資産化</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Business Model -->
+        <section class="slide slide-business">
+            <div class="content">
+                <h2 class="section-title">ビジネス<span>モデル</span></h2>
+                <div class="business-flow">
+                    <div class="business-actor">
+                        <div class="actor-icon">👤</div>
+                        <div class="actor-title">データ所有者</div>
+                        <div class="actor-desc">個人ユーザー<br>（NTTドコモユーザー等）</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="business-actor">
+                        <div class="actor-icon">🏛️</div>
+                        <div class="actor-title">DataSov</div>
+                        <div class="actor-desc">マーケットプレイス<br>プラットフォーム</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="business-actor">
+                        <div class="actor-icon">🏢</div>
+                        <div class="actor-title">データ購入者</div>
+                        <div class="actor-desc">企業・研究機関<br>金融機関</div>
+                    </div>
+                </div>
+                <div class="revenue-model">
+                    <h3>収益配分モデル</h3>
+                    <div class="revenue-split">
+                        <div class="revenue-item">
+                            <div class="revenue-percentage user">97.5%</div>
+                            <div class="revenue-label">データ所有者（ユーザー）</div>
+                        </div>
+                        <div class="revenue-item">
+                            <div class="revenue-percentage platform">2.5%</div>
+                            <div class="revenue-label">プラットフォーム手数料</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Market -->
+        <section class="slide slide-market">
+            <div class="content">
+                <h2 class="section-title">市場<span>機会</span></h2>
+                <div class="market-stats">
+                    <div class="market-stat">
+                        <div class="market-stat-value">¥50兆+</div>
+                        <div class="market-stat-label">グローバルデータ市場</div>
+                        <div class="market-stat-desc">2025年予測</div>
+                    </div>
+                    <div class="market-stat">
+                        <div class="market-stat-value">年25%</div>
+                        <div class="market-stat-label">市場成長率</div>
+                        <div class="market-stat-desc">CAGR</div>
+                    </div>
+                    <div class="market-stat">
+                        <div class="market-stat-value">8,500万+</div>
+                        <div class="market-stat-label">日本の潜在ユーザー</div>
+                        <div class="market-stat-desc">スマートフォン利用者</div>
+                    </div>
+                </div>
+                <div class="target-segments">
+                    <div class="segment">
+                        <h4>データ提供者（B2C）</h4>
+                        <ul>
+                            <li>NTTドコモユーザー</li>
+                            <li>健康意識の高い個人</li>
+                            <li>データ収益化に興味のある消費者</li>
+                        </ul>
+                    </div>
+                    <div class="segment">
+                        <h4>データ購入者（B2B）</h4>
+                        <ul>
+                            <li>マーケティング・広告企業</li>
+                            <li>医療・ヘルスケア研究機関</li>
+                            <li>金融・保険会社</li>
+                        </ul>
+                    </div>
+                    <div class="segment">
+                        <h4>パートナー</h4>
+                        <ul>
+                            <li>通信キャリア</li>
+                            <li>フィンテック企業</li>
+                            <li>IoTデバイスメーカー</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Competitive Advantage -->
+        <section class="slide slide-advantage">
+            <div class="content">
+                <h2 class="section-title">競合<span>優位性</span></h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>比較項目</th>
+                            <th>DataSov</th>
+                            <th>従来のデータブローカー</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>データ所有権</td>
+                            <td class="datasov-col">ユーザーが完全所有</td>
+                            <td class="traditional-col">企業が所有</td>
+                        </tr>
+                        <tr>
+                            <td>プライバシー</td>
+                            <td class="datasov-col">E2E暗号化・匿名化</td>
+                            <td class="traditional-col">中央集権型ストレージ</td>
+                        </tr>
+                        <tr>
+                            <td>ユーザー還元率</td>
+                            <td class="datasov-col">97.5%</td>
+                            <td class="traditional-col">0〜5%</td>
+                        </tr>
+                        <tr>
+                            <td>アクセス制御</td>
+                            <td class="datasov-col">即時取り消し可能</td>
+                            <td class="traditional-col">困難または不可能</td>
+                        </tr>
+                        <tr>
+                            <td>透明性</td>
+                            <td class="datasov-col">完全な監査証跡</td>
+                            <td class="traditional-col">ブラックボックス</td>
+                        </tr>
+                        <tr>
+                            <td>スケーラビリティ</td>
+                            <td class="datasov-col">65,000+ TPS</td>
+                            <td class="traditional-col">限定的</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 9: Roadmap -->
+        <section class="slide slide-roadmap">
+            <div class="content">
+                <h2 class="section-title">開発<span>ロードマップ</span></h2>
+                <div class="roadmap">
+                    <div class="roadmap-item completed">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-phase">Phase 1</div>
+                        <div class="roadmap-title">MVP開発</div>
+                        <ul class="roadmap-items">
+                            <li>コア機能実装</li>
+                            <li>Solanaマーケット</li>
+                            <li>基本UI/UX</li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-phase">Phase 2</div>
+                        <div class="roadmap-title">パイロット展開</div>
+                        <ul class="roadmap-items">
+                            <li>NTTドコモ連携</li>
+                            <li>βテスト実施</li>
+                            <li>フィードバック収集</li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-phase">Phase 3</div>
+                        <div class="roadmap-title">本格ローンチ</div>
+                        <ul class="roadmap-items">
+                            <li>一般公開</li>
+                            <li>データ種類拡大</li>
+                            <li>企業パートナー拡大</li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-phase">Phase 4</div>
+                        <div class="roadmap-title">グローバル展開</div>
+                        <ul class="roadmap-items">
+                            <li>海外市場参入</li>
+                            <li>多言語対応</li>
+                            <li>規制対応強化</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: CTA -->
+        <section class="slide slide-cta">
+            <div class="content">
+                <h1 class="cta-logo">DataSov</h1>
+                <p class="cta-tagline">データの価値を、あなたの手に。</p>
+                <div class="cta-buttons">
+                    <a href="#" class="cta-btn primary">デモを体験する</a>
+                    <a href="#" class="cta-btn secondary">お問い合わせ</a>
+                </div>
+                <div class="contact-info">
+                    <p>contact@datasov.com</p>
+                    <p>www.datasov.com</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('slidesContainer');
+        const navDots = document.querySelectorAll('.nav-dot');
+        const currentSlideEl = document.getElementById('currentSlide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+        const totalSlides = 10;
+
+        function updateNavigation() {
+            navDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+            currentSlideEl.textContent = currentIndex + 1;
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === totalSlides - 1;
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            container.scrollTo({
+                left: index * window.innerWidth,
+                behavior: 'smooth'
+            });
+            updateNavigation();
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalSlides - 1) {
+                goToSlide(currentIndex + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                goToSlide(currentIndex - 1);
+            }
+        }
+
+        // Update on scroll
+        container.addEventListener('scroll', () => {
+            const newIndex = Math.round(container.scrollLeft / window.innerWidth);
+            if (newIndex !== currentIndex) {
+                currentIndex = newIndex;
+                updateNavigation();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        container.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        });
+
+        // Initial state
+        updateNavigation();
+    </script>
+</body>
+</html>
