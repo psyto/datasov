@@ -225,7 +225,184 @@
             line-height: 1.8;
         }
 
-        /* Slide 2: Problem */
+        /* Slide 2: Why Now */
+        .slide-whynow {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+        }
+
+        .whynow-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .whynow-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .whynow-header h2 span {
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .whynow-header p {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.9;
+        }
+
+        .whynow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .whynow-narrative {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .narrative-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s;
+        }
+
+        .narrative-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .narrative-card .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .narrative-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #93c5fd;
+        }
+
+        .narrative-card p {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.8;
+        }
+
+        .rwo-evolution {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 36px;
+        }
+
+        .rwo-title {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .rwo-book {
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: #c4b5fd;
+        }
+
+        .rwo-phases {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .rwo-phase {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .rwo-phase:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .rwo-phase .phase-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .rwo-phase.read .phase-icon {
+            background: linear-gradient(135deg, #374151, #4b5563);
+        }
+
+        .rwo-phase.write .phase-icon {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+        }
+
+        .rwo-phase.own .phase-icon {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            box-shadow: 0 0 24px rgba(167, 139, 250, 0.4);
+        }
+
+        .rwo-phase .phase-text h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .rwo-phase.read .phase-text h4 { color: #9ca3af; }
+        .rwo-phase.write .phase-text h4 { color: #93c5fd; }
+        .rwo-phase.own .phase-text h4 { color: #c4b5fd; }
+
+        .rwo-phase .phase-text p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .rwo-arrow {
+            text-align: center;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.3);
+            padding: 4px 0;
+        }
+
+        .rwo-phase.own {
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            background: rgba(167, 139, 250, 0.08);
+        }
+
+        .rwo-source {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Slide 3: Problem */
         .slide-problem {
             background: white;
         }
@@ -931,6 +1108,10 @@
                 padding: 40px 50px;
             }
 
+            .whynow-grid {
+                grid-template-columns: 1fr;
+            }
+
             .problem-grid,
             .features-grid,
             .market-stats,
@@ -999,7 +1180,7 @@
 
     <!-- Slide Counter -->
     <div class="slide-counter">
-        <span id="currentSlide">1</span> / <span id="totalSlides">10</span>
+        <span id="currentSlide">1</span> / <span id="totalSlides">11</span>
     </div>
 
     <!-- Navigation Bar -->
@@ -1014,6 +1195,7 @@
         <div class="nav-dot" onclick="goToSlide(7)"></div>
         <div class="nav-dot" onclick="goToSlide(8)"></div>
         <div class="nav-dot" onclick="goToSlide(9)"></div>
+        <div class="nav-dot" onclick="goToSlide(10)"></div>
     </nav>
 
     <!-- Slides Container -->
@@ -1023,37 +1205,92 @@
         <section class="slide slide-title">
             <div class="content">
                 <h1 class="logo">DataSov</h1>
-                <p class="tagline">あなたのデータ、あなたの価値</p>
+                <p class="tagline">AI時代、あなたのデータは誰のもの？</p>
                 <p class="subtitle">
-                    ハイブリッドブロックチェーン技術で実現する<br>
-                    次世代のパーソナルデータ管理・収益化プラットフォーム
+                    データの所有権をユーザーの手に取り戻す。<br>
+                    ハイブリッドブロックチェーンで実現する<br>
+                    次世代パーソナルデータ主権プラットフォーム
                 </p>
             </div>
         </section>
 
-        <!-- Slide 2: Problem -->
+        <!-- Slide 2: Why Now -->
+        <section class="slide slide-whynow">
+            <div class="content">
+                <div class="whynow-header">
+                    <h2>なぜ今、<span>データ主権</span>なのか</h2>
+                    <p>「プラットフォームにデータを使われるのが当たり前」だった時代が、今、大きな転換点を迎えています。</p>
+                </div>
+                <div class="whynow-grid">
+                    <div class="whynow-narrative">
+                        <div class="narrative-card">
+                            <div class="card-icon">🤖</div>
+                            <h4>AIが加速させるデータの価値</h4>
+                            <p>AIが進化すればするほど、その糧となる「データ」の価値は上がります。大規模言語モデルの学習には膨大なデータが必要であり、あなたのデータは今やAI企業にとって最も重要な「原材料」です。</p>
+                        </div>
+                        <div class="narrative-card">
+                            <div class="card-icon">⚖️</div>
+                            <h4>無視できない「データ主権」</h4>
+                            <p>にもかかわらず、データの生み出す価値はほぼすべてプラットフォーム側に吸収されています。だからこそ、データの所有権をユーザーの手に取り戻す「データ主権」の考え方が無視できなくなっているのです。</p>
+                        </div>
+                    </div>
+                    <div class="rwo-evolution">
+                        <div class="rwo-title">Chris Dixon『Read Write Own』より</div>
+                        <div class="rwo-book">インターネットの3つの進化フェーズ</div>
+                        <div class="rwo-phases">
+                            <div class="rwo-phase read">
+                                <div class="phase-icon">📖</div>
+                                <div class="phase-text">
+                                    <h4>Read（閲覧）</h4>
+                                    <p>Web 1.0 — 情報を読むだけの時代</p>
+                                </div>
+                            </div>
+                            <div class="rwo-arrow">↓</div>
+                            <div class="rwo-phase write">
+                                <div class="phase-icon">✍️</div>
+                                <div class="phase-text">
+                                    <h4>Write（発信）</h4>
+                                    <p>Web 2.0 — 誰もが発信できる時代</p>
+                                </div>
+                            </div>
+                            <div class="rwo-arrow">↓</div>
+                            <div class="rwo-phase own">
+                                <div class="phase-icon">🔑</div>
+                                <div class="phase-text">
+                                    <h4>Own（所有）</h4>
+                                    <p>Web 3.0 — 個人がデータを所有する時代</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rwo-source">— Chris Dixon, a16z crypto『Read Write Own』(2024)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Problem -->
         <section class="slide slide-problem">
             <div class="content">
-                <h2 class="section-title">解決すべき<span>課題</span></h2>
+                <h2 class="section-title">AI時代に深刻化する<span>課題</span></h2>
                 <div class="problem-grid">
                     <div class="problem-card">
                         <div class="problem-icon">🔓</div>
-                        <h3>データの無断利用</h3>
-                        <p>大手IT企業があなたのデータを収集・販売し、莫大な利益を得ています。</p>
+                        <h3>AI学習への無断利用</h3>
+                        <p>あなたのデータはAIモデルの学習に無断で使われ、大手AI企業が莫大な利益を得ています。</p>
                         <span class="stat-highlight">¥50兆+</span>
                         <p class="stat-label">世界のデータ市場規模</p>
                     </div>
                     <div class="problem-card">
                         <div class="problem-icon">💔</div>
                         <h3>ユーザーへの還元なし</h3>
-                        <p>あなたのデータが生み出す価値のほぼ100%が企業に渡っています。</p>
+                        <p>AIが生み出す巨大な価値の源泉はあなたのデータ。しかし還元率はほぼゼロです。</p>
                         <span class="stat-highlight">0%</span>
                         <p class="stat-label">従来のユーザー還元率</p>
                     </div>
                     <div class="problem-card">
                         <div class="problem-icon">⚠️</div>
-                        <h3>プライバシーリスク</h3>
-                        <p>一度提供したデータの削除や利用停止が困難で、情報漏洩のリスクも。</p>
+                        <h3>制御不能なデータ拡散</h3>
+                        <p>一度AIに学習されたデータは取り消し不可能。プライバシーリスクは不可逆的に拡大します。</p>
                         <span class="stat-highlight">83%</span>
                         <p class="stat-label">データ管理に不安を感じる人</p>
                     </div>
@@ -1407,7 +1644,7 @@
         <section class="slide slide-cta">
             <div class="content">
                 <h1 class="cta-logo">DataSov</h1>
-                <p class="cta-tagline">データの価値を、あなたの手に。</p>
+                <p class="cta-tagline">データ主権の時代を、共に切り拓く。</p>
                 <div class="cta-buttons">
                     <a href="#" class="cta-btn primary">デモを体験する</a>
                     <a href="#" class="cta-btn secondary">お問い合わせ</a>
@@ -1428,7 +1665,7 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         let currentIndex = 0;
-        const totalSlides = 10;
+        const totalSlides = 11;
 
         function updateNavigation() {
             navDots.forEach((dot, i) => {
