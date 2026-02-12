@@ -64,10 +64,11 @@ pub mod datasov_solana {
         let purchase_amount = listing.price;
         let fee_amount = (purchase_amount as u128)
             .checked_mul(marketplace.fee_basis_points as u128)
-            .unwrap()
+            .ok_or(error!(ErrorCode::ArithmeticOverflow))?
             .checked_div(10000)
-            .unwrap() as u64;
-        let owner_amount = purchase_amount.checked_sub(fee_amount).unwrap();
+            .ok_or(error!(ErrorCode::ArithmeticOverflow))? as u64;
+        let owner_amount = purchase_amount.checked_sub(fee_amount)
+            .ok_or(error!(ErrorCode::ArithmeticOverflow))?;
         
         // Transfer payment to owner
         let cpi_accounts = Transfer {
@@ -348,4 +349,6 @@ pub enum ErrorCode {
     InsufficientFunds,
     #[msg("Invalid price")]
     InvalidPrice,
+    #[msg("Arithmetic overflow")]
+    ArithmeticOverflow,
 }
