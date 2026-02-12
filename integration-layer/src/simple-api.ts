@@ -27,6 +27,9 @@ declare global {
 const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || "datasov-demo-secret-key";
+if (!process.env.JWT_SECRET) {
+    console.warn("WARNING: Using default JWT secret. Set JWT_SECRET env var in production.");
+}
 
 // Middleware
 app.use(helmet());
