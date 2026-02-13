@@ -9,7 +9,7 @@ import { DataSovClient, DataType } from "../src/index";
 // Example usage of DataSov Solana Component
 async function main() {
     // Configuration
-    const RPC_URL = "https://api.devnet.solana.com";
+    const RPC_URL = process.env.SOLANA_RPC_URL || "https://api.devnet.solana.com";
     const PROGRAM_ID = new PublicKey(
         "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
     );
