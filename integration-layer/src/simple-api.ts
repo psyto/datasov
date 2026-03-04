@@ -57,7 +57,7 @@ const initializeDemoData = () => {
         email: "demo@datasov.com",
         name: "Demo User",
         password: bcrypt.hashSync("password123", 10),
-        avatar: "https://via.placeholder.com/40",
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent("demo@datasov.com")}&size=40`,
         createdAt: Date.now() - 86400000 * 30,
         lastLoginAt: Date.now(),
     });
@@ -288,7 +288,7 @@ app.post("/auth/register", async (req, res) => {
             email,
             name,
             password: bcrypt.hashSync(password, 10),
-            avatar: "https://via.placeholder.com/40",
+            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(email)}&size=40`,
             createdAt: Date.now(),
             lastLoginAt: Date.now(),
         };
